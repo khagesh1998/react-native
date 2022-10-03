@@ -54,7 +54,7 @@ public class RNTesterActivity extends ReactActivity {
 
     @Override
     protected boolean isConcurrentRootEnabled() {
-      return true;
+      return false;
     }
   }
 
