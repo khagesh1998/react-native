@@ -52,16 +52,16 @@ function renderApplication<Props: Object>(
     </PerformanceLoggerContext.Provider>
   );
 
-  if (__DEV__ && debugName) {
-    const RootComponentWithMeaningfulName = getCachedComponentWithDebugName(
-      `${debugName}(RootComponent)`,
-    );
-    renderable = (
-      <RootComponentWithMeaningfulName>
-        {renderable}
-      </RootComponentWithMeaningfulName>
-    );
-  }
+  // if (__DEV__ && debugName) {
+  //   const RootComponentWithMeaningfulName = getCachedComponentWithDebugName(
+  //     `${debugName}(RootComponent)`,
+  //   );
+  //   renderable = (
+  //     <RootComponentWithMeaningfulName>
+  //       {renderable}
+  //     </RootComponentWithMeaningfulName>
+  //   );
+  // }
 
   performanceLogger.startTimespan('renderApplication_React_render');
   performanceLogger.setExtra(
@@ -69,6 +69,7 @@ function renderApplication<Props: Object>(
     useConcurrentRoot ? '1' : '0',
   );
   performanceLogger.setExtra('usedReactFabric', fabric ? '1' : '0');
+  // console.log(renderable, rootTag);
   if (fabric) {
     require('../Renderer/shims/ReactFabric').render(
       renderable,

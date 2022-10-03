@@ -76,17 +76,17 @@ class AppContainer extends React.Component<Props, State> {
   }
 
   render(): React.Node {
-    let logBox = null;
-    if (__DEV__) {
-      if (
-        !global.__RCTProfileIsProfiling &&
-        !this.props.internal_excludeLogBox
-      ) {
-        const LogBoxNotificationContainer =
-          require('../LogBox/LogBoxNotificationContainer').default;
-        logBox = <LogBoxNotificationContainer />;
-      }
-    }
+    // let logBox = null;
+    // if (__DEV__) {
+    //   if (
+    //     !global.__RCTProfileIsProfiling &&
+    //     !this.props.internal_excludeLogBox
+    //   ) {
+    //     const LogBoxNotificationContainer =
+    //       require('../LogBox/LogBoxNotificationContainer').default;
+    //     logBox = <LogBoxNotificationContainer />;
+    //   }
+    // }
 
     let innerView: React.Node = (
       <View
@@ -119,7 +119,6 @@ class AppContainer extends React.Component<Props, State> {
         <View style={styles.appContainer} pointerEvents="box-none">
           {!this.state.hasError && innerView}
           {this.state.inspector}
-          {logBox}
         </View>
       </RootTagContext.Provider>
     );

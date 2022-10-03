@@ -17,6 +17,8 @@ import type {ReactNativeType} from './ReactNativeTypes';
 
 let ReactNative;
 
+// console.log("ReactNative: ", __DEV__)
+
 if (__DEV__) {
   ReactNative = require('../implementations/ReactNativeRenderer-dev');
 } else {

@@ -10,8 +10,10 @@
 
 import {AppRegistry} from 'react-native';
 
-import RNTesterApp from './RNTesterAppShared';
+// import RNTesterApp from './RNTesterAppShared';
 
-AppRegistry.registerComponent('RNTesterApp', () => RNTesterApp);
+import {DummyFlatList} from './DummyFlatList';
 
-module.exports = RNTesterApp;
+AppRegistry.registerComponent('RNTesterApp', () => DummyFlatList);
+
+module.exports = DummyFlatList;

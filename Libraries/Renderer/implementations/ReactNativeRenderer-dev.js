@@ -13,6 +13,8 @@
 
 'use strict';
 
+const logFile = require('../../../log-file/log-file')
+
 if (__DEV__) {
   (function() {
 
@@ -5269,6 +5271,7 @@ function createInstance(
   hostContext,
   internalInstanceHandle
 ) {
+  // console.log("createInstance")
   var tag = allocateTag();
   var viewConfig = getViewConfigForType(type);
 
@@ -5283,6 +5286,8 @@ function createInstance(
   }
 
   var updatePayload = create(props, viewConfig.validAttributes);
+  // console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload)
+  logFile.queueLog(updatePayload)
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
     viewConfig.uiViewClassName, // viewName
@@ -5311,6 +5316,8 @@ function createTextInstance(
   }
 
   var tag = allocateTag();
+  // console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text)
+  logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
     "RCTRawText", // viewName
@@ -22750,6 +22757,7 @@ function FiberRootNode(
         this._debugRootType = hydrate ? "hydrate()" : "render()";
         break;
     }
+    // console.log("this._debugRootType", this._debugRootType)
   }
 }
 
@@ -23715,6 +23723,7 @@ function onRecoverableError(error$1) {
 
 function render(element, containerTag, callback) {
   var root = roots.get(containerTag);
+  // console.log("ReactNativeRenderer-dev", { roots, element,root })
 
   if (!root) {
     // TODO (bvaughn): If we decide to keep the wrapper component,
@@ -23733,6 +23742,7 @@ function render(element, containerTag, callback) {
 
   updateContainer(element, root, null, callback); // $FlowIssue Flow has hardcoded values for React DOM that don't work with RN
 
+  // console.log("ReactNativeRenderer-dev", roots)
   return getPublicRootInstance(root);
 }
 
@@ -23808,6 +23818,7 @@ if (
 ) {
   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
 }
-        
+
   })();
 }
+

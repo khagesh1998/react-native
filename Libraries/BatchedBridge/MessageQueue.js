@@ -12,6 +12,7 @@
 
 const ErrorUtils = require('../vendor/core/ErrorUtils');
 const Systrace = require('../Performance/Systrace');
+// const LogFile = require('../../log-file/log-file');
 
 const deepFreezeAndThrowOnMutationInDev = require('../Utilities/deepFreezeAndThrowOnMutationInDev');
 const invariant = require('invariant');
@@ -243,6 +244,7 @@ class MessageQueue {
     onFail: ?(...mixed[]) => void,
     onSucc: ?(...mixed[]) => void,
   ) {
+    // console.log("*******enqueueNativeCall",moduleID, methodID, params)
     this.processCallbacks(moduleID, methodID, params, onFail, onSucc);
 
     this._queue[MODULE_IDS].push(moduleID);
@@ -318,7 +320,11 @@ class MessageQueue {
       const queue = this._queue;
       this._queue = [[], [], [], this._callID];
       this._lastFlush = now;
+      // const startTime = Date.now()
       global.nativeFlushQueueImmediate(queue);
+      // const endTime = Date.now()
+      // console.log("enqueueNativeCall",endTime-startTime, startTime, endTime)
+      // LogFile.addEnqueueNativeCall(Date.now() - startTime)
     }
     Systrace.counterEvent('pending_js_to_native_queue', this._queue[0].length);
     if (__DEV__ && this.__spy && isFinite(moduleID)) {
@@ -467,5 +473,11 @@ class MessageQueue {
     }
   }
 }
+
+// global.setTimeout(()=>{
+//
+// },10000)
+
+// console.log(global)
 
 module.exports = MessageQueue;

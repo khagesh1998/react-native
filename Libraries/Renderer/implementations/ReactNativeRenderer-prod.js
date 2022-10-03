@@ -16,6 +16,7 @@ require("react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore");
 var ReactNativePrivateInterface = require("react-native/Libraries/ReactPrivate/ReactNativePrivateInterface"),
   React = require("react"),
   Scheduler = require("scheduler");
+const logFile = require("../../../log-file/log-file");
 function invokeGuardedCallbackImpl(name, func, context, a, b, c, d, e, f) {
   var funcArgs = Array.prototype.slice.call(arguments, 3);
   try {
@@ -4375,6 +4376,8 @@ function completeWork(current, workInProgress, renderLanes) {
           newProps,
           type.validAttributes
         );
+        // console.log("createView", current,type.uiViewClassName,renderLanes, Date.now())
+        logFile.queueLog(updatePayload)
         ReactNativePrivateInterface.UIManager.createView(
           current,
           type.uiViewClassName,
@@ -4414,6 +4417,8 @@ function completeWork(current, workInProgress, renderLanes) {
             "Text strings must be rendered within a <Text> component."
           );
         renderLanes = allocateTag();
+        // console.log("createView", renderLanes,"RCTRawText",current, Date.now())
+        logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
         ReactNativePrivateInterface.UIManager.createView(
           renderLanes,
           "RCTRawText",

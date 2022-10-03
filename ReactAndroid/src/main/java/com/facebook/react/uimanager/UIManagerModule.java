@@ -14,6 +14,7 @@ import static com.facebook.react.uimanager.common.UIManagerType.FABRIC;
 
 import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +51,7 @@ import com.facebook.systrace.Systrace;
 import com.facebook.systrace.SystraceMessage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -483,8 +485,48 @@ public class UIManagerModule extends ReactContextBaseJavaModule
         });
   }
 
+  public static long queueStartTime = 0;
+  public static long queueEndTime = 0;
+
+  public void queueLog(ReadableMap props){
+    String accessibilityLabel = (String) props.toHashMap().get("accessibilityLabel");
+    boolean isView = false;
+    boolean isText = false;
+    boolean isScrollView = false;
+    if(accessibilityLabel!=null){
+      isView = accessibilityLabel.contains("listViewItem");
+      isText = accessibilityLabel.contains("listTextView");
+      isScrollView = accessibilityLabel.contains("customScrollView");
+    }
+
+    String text = (String) props.toHashMap().get("text");
+    boolean isRCTText = false;
+    if(text!=null){
+      isRCTText = text.contains("Item index");
+    }
+
+    if(!isView && !isText && !isScrollView && !isRCTText){
+      return;
+    }
+
+//    Log.d("dummy",accessibilityLabel + " : " + text);
+
+    long currentTime = System.currentTimeMillis();
+    if(queueStartTime==0){
+      queueStartTime = currentTime;
+    }
+    queueEndTime = currentTime;
+  }
+
+  public void printQueueLogs(){
+    Log.d("onBatchComplete","------------------------------------------- onBatchComplete----------------------------------------");
+    Log.d("NativeQueueTime","queueStartTime: " + queueStartTime + ", queueEndTime: " + queueEndTime + ", diff: " + (queueEndTime - queueStartTime));
+  }
+
   @ReactMethod
   public void createView(int tag, String className, int rootViewTag, ReadableMap props) {
+    queueLog(props);
+//    Log.d("NativeCreateView", tag + ", " + className + ", " + rootViewTag + ", " + System.currentTimeMillis() + ":::::" + props.toHashMap());
     if (DEBUG) {
       String message =
           "(UIManager.createView) tag: " + tag + ", class: " + className + ", props: " + props;
@@ -781,6 +823,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule
    */
   @Override
   public void onBatchComplete() {
+    printQueueLogs();
     int batchId = mBatchId;
     mBatchId++;
 

@@ -97,6 +97,7 @@ function loadModule(name: string, moduleID: number): ?{...} {
 }
 
 function genMethod(moduleID: number, methodID: number, type: MethodType) {
+  // console.log("====== genMethod", moduleID, methodID, type)
   let fn = null;
   if (type === 'promise') {
     fn = function promiseMethodWrapper(...args: Array<mixed>) {

@@ -12,7 +12,8 @@
   "scripts": {
     "start": "../../scripts/packager.sh",
     "install-android-jsc": "../../gradlew :packages:rn-tester:android:app:installJscDebug",
-    "install-android-hermes": "../../gradlew :packages:rn-tester:android:app:installHermesDebug",
+    "android": "../../gradlew :packages:rn-tester:android:app:installHermesDebug",
+    "android:release": "../../gradlew :packages:rn-tester:android:app:installHermesRelease",
     "clean-android": "rm -rf android/app/build",
     "setup-ios-jsc": "bundle install && bundle exec pod install",
     "setup-ios-hermes": "bundle install && USE_HERMES=1 bundle exec pod install",
