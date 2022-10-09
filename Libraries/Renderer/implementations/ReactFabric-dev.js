@@ -13,6 +13,7 @@
 
 'use strict';
 
+const logFile = require("../../../log-file/log-file");
 if (__DEV__) {
   (function() {
 
@@ -5272,6 +5273,8 @@ function createInstance(
   }
 
   var updatePayload = create(props, viewConfig.validAttributes);
+  // console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload, internalInstanceHandle)
+  logFile.queueLog(updatePayload)
   var node = createNode(
     tag, // reactTag
     viewConfig.uiViewClassName, // viewName
@@ -5304,6 +5307,8 @@ function createTextInstance(
 
   var tag = nextReactTag;
   nextReactTag += 2;
+  // console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text, internalInstanceHandle)
+  logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
   var node = createNode(
     tag, // reactTag
     "RCTRawText", // viewName
@@ -23468,6 +23473,6 @@ if (
 ) {
   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
 }
-        
+
   })();
 }

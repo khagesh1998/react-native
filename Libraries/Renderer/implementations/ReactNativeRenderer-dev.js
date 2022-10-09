@@ -3020,11 +3020,13 @@ var ReactNativeGlobalResponderHandler = {
   onChange: function(from, to, blockNativeResponder) {
     if (to !== null) {
       var tag = to.stateNode._nativeTag;
+      console.log("uimanager.setJSResponder")
       ReactNativePrivateInterface.UIManager.setJSResponder(
         tag,
         blockNativeResponder
       );
     } else {
+      console.log("uimanager.clearJSResponder")
       ReactNativePrivateInterface.UIManager.clearJSResponder();
     }
   }
@@ -4277,6 +4279,7 @@ var ReactNativeFiberHostComponent = /*#__PURE__*/ (function() {
     // view invalidation for certain components (eg RCTTextInput) on iOS.
 
     if (updatePayload != null) {
+      console.log("uimanager.updateView")
       ReactNativePrivateInterface.UIManager.updateView(
         this._nativeTag,
         this.viewConfig.uiViewClassName,
@@ -5271,7 +5274,6 @@ function createInstance(
   hostContext,
   internalInstanceHandle
 ) {
-  // console.log("createInstance")
   var tag = allocateTag();
   var viewConfig = getViewConfigForType(type);
 
@@ -5286,7 +5288,7 @@ function createInstance(
   }
 
   var updatePayload = create(props, viewConfig.validAttributes);
-  // console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload)
+  console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload)
   logFile.queueLog(updatePayload)
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
@@ -5316,7 +5318,7 @@ function createTextInstance(
   }
 
   var tag = allocateTag();
-  // console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text)
+  console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text)
   logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
@@ -5348,6 +5350,7 @@ function finalizeInitialChildren(
       : child._nativeTag;
   });
 
+  console.log("uimanager.setChildren")
   ReactNativePrivateInterface.UIManager.setChildren(
     parentInstance._nativeTag, // containerTag
     nativeTags // reactTags
@@ -5419,6 +5422,7 @@ function appendChild(parentInstance, child) {
   if (index >= 0) {
     children.splice(index, 1);
     children.push(child);
+    console.log("uimanager.manageChildren")
     ReactNativePrivateInterface.UIManager.manageChildren(
       parentInstance._nativeTag, // containerTag
       [index], // moveFromIndices
@@ -5429,6 +5433,7 @@ function appendChild(parentInstance, child) {
     );
   } else {
     children.push(child);
+    console.log("uimanager.manageChildren")
     ReactNativePrivateInterface.UIManager.manageChildren(
       parentInstance._nativeTag, // containerTag
       [], // moveFromIndices
@@ -5441,12 +5446,14 @@ function appendChild(parentInstance, child) {
 }
 function appendChildToContainer(parentInstance, child) {
   var childTag = typeof child === "number" ? child : child._nativeTag;
+  console.log("uimanager.setChildren")
   ReactNativePrivateInterface.UIManager.setChildren(
     parentInstance, // containerTag
     [childTag] // reactTags
   );
 }
 function commitTextUpdate(textInstance, oldText, newText) {
+  console.log("uimanager.updateView")
   ReactNativePrivateInterface.UIManager.updateView(
     textInstance, // reactTag
     "RCTRawText", // viewName
@@ -5470,6 +5477,7 @@ function commitUpdate(
   // view invalidation for certain components (eg RCTTextInput) on iOS.
 
   if (updatePayload != null) {
+    console.log("uimanager.updateView")
     ReactNativePrivateInterface.UIManager.updateView(
       instance._nativeTag, // reactTag
       viewConfig.uiViewClassName, // viewName
@@ -5485,6 +5493,7 @@ function insertBefore(parentInstance, child, beforeChild) {
     children.splice(index, 1);
     var beforeChildIndex = children.indexOf(beforeChild);
     children.splice(beforeChildIndex, 0, child);
+    console.log("uimanager.manageChildren")
     ReactNativePrivateInterface.UIManager.manageChildren(
       parentInstance._nativeTag, // containerID
       [index], // moveFromIndices
@@ -5498,6 +5507,7 @@ function insertBefore(parentInstance, child, beforeChild) {
 
     children.splice(_beforeChildIndex, 0, child);
     var childTag = typeof child === "number" ? child : child._nativeTag;
+    console.log("uimanager.manageChildren")
     ReactNativePrivateInterface.UIManager.manageChildren(
       parentInstance._nativeTag, // containerID
       [], // moveFromIndices
@@ -5522,6 +5532,7 @@ function removeChild(parentInstance, child) {
   var children = parentInstance._children;
   var index = children.indexOf(child);
   children.splice(index, 1);
+  console.log("uimanager.manageChildren")
   ReactNativePrivateInterface.UIManager.manageChildren(
     parentInstance._nativeTag, // containerID
     [], // moveFromIndices
@@ -5533,6 +5544,7 @@ function removeChild(parentInstance, child) {
 }
 function removeChildFromContainer(parentInstance, child) {
   recursivelyUncacheFiberNode(child);
+  console.log("uimanager.manageChildren")
   ReactNativePrivateInterface.UIManager.manageChildren(
     parentInstance, // containerID
     [], // moveFromIndices
@@ -5555,6 +5567,7 @@ function hideInstance(instance) {
     },
     viewConfig.validAttributes
   );
+  console.log("uimanager.updateView")
   ReactNativePrivateInterface.UIManager.updateView(
     instance._nativeTag,
     viewConfig.uiViewClassName,
@@ -5578,6 +5591,7 @@ function unhideInstance(instance, props) {
     props,
     viewConfig.validAttributes
   );
+  console.log("uimanager.updateView")
   ReactNativePrivateInterface.UIManager.updateView(
     instance._nativeTag,
     viewConfig.uiViewClassName,
@@ -11816,7 +11830,11 @@ function dispatchSetState(fiber, queue, action) {
     }
 
     var eventTime = requestEventTime();
+    console.log("start", Date.now(),fiber, lane, eventTime)
+    logFile.startSetState();
     var root = scheduleUpdateOnFiber(fiber, lane, eventTime);
+    console.log("end", Date.now(),root)
+    logFile.endSetState();
 
     if (root !== null) {
       entangleTransitionUpdate(root, queue, lane);
@@ -13762,6 +13780,7 @@ function bubbleProperties(completedWork) {
 }
 
 function completeWork(current, workInProgress, renderLanes) {
+  console.log("complete work: ", workInProgress.type, workInProgress)
   var newProps = workInProgress.pendingProps; // Note: This intentionally doesn't check if we're hydrating because comparing
   // to the current tree provider fiber is just as fast and less error-prone.
   // Ideally we would have a special version of the work loop only
@@ -16836,6 +16855,7 @@ function attemptEarlyBailoutIfNoScheduledUpdate(
 }
 
 function beginWork(current, workInProgress, renderLanes) {
+  console.log("begin work: ", workInProgress.type, workInProgress)
   {
     if (workInProgress._debugNeedsRemount && current !== null) {
       // This will restart the begin phase with a new fiber.
@@ -18626,6 +18646,7 @@ function commitDeletion(finishedRoot, current, nearestMountedAncestor) {
 }
 
 function commitWork(current, finishedWork) {
+  console.log("commit work: ", finishedWork.type, finishedWork)
   switch (finishedWork.tag) {
     case FunctionComponent:
     case ForwardRef:
@@ -22757,7 +22778,6 @@ function FiberRootNode(
         this._debugRootType = hydrate ? "hydrate()" : "render()";
         break;
     }
-    // console.log("this._debugRootType", this._debugRootType)
   }
 }
 
@@ -23518,6 +23538,7 @@ var getInspectorDataForViewAtPoint;
       );
     } else if (inspectedView._internalFiberInstanceHandleDEV != null) {
       // For Paper we fall back to the old strategy using the React tag.
+      console.log("uimanager.findSubviewIn")
       ReactNativePrivateInterface.UIManager.findSubviewIn(
         findNodeHandle(inspectedView),
         [locationX, locationY],
@@ -23681,6 +23702,7 @@ function dispatchCommand(handle, command, args) {
       nativeFabricUIManager.dispatchCommand(stateNode.node, command, args);
     }
   } else {
+    console.log("uimanager.dispatchViewManagerCommand")
     ReactNativePrivateInterface.UIManager.dispatchViewManagerCommand(
       handle._nativeTag,
       command,
@@ -23723,7 +23745,6 @@ function onRecoverableError(error$1) {
 
 function render(element, containerTag, callback) {
   var root = roots.get(containerTag);
-  // console.log("ReactNativeRenderer-dev", { roots, element,root })
 
   if (!root) {
     // TODO (bvaughn): If we decide to keep the wrapper component,
@@ -23742,7 +23763,6 @@ function render(element, containerTag, callback) {
 
   updateContainer(element, root, null, callback); // $FlowIssue Flow has hardcoded values for React DOM that don't work with RN
 
-  // console.log("ReactNativeRenderer-dev", roots)
   return getPublicRootInstance(root);
 }
 
@@ -23760,6 +23780,7 @@ function unmountComponentAtNode(containerTag) {
 function unmountComponentAtNodeAndRemoveContainer(containerTag) {
   unmountComponentAtNode(containerTag); // Call back into native to remove all of the subviews from this container
 
+  console.log("uimanager.removeRootView")
   ReactNativePrivateInterface.UIManager.removeRootView(containerTag);
 }
 

@@ -1,13 +1,13 @@
 import React, { memo, useState, useEffect, useRef } from "react";
 
 import {ScrollView, Text,View,LogBox} from 'react-native';
-import { setMount, setStart } from "../../../log-file/log-file";
+import { setMount, setStart, printLogs } from "../../../log-file/log-file";
 
 // import TestRenderer from 'react-test-renderer';
 
 LogBox.ignoreAllLogs();
 
-export const useLogFile = () => {
+export const useLogFile = (state) => {
   const ref = useRef(true);
   if (ref.current){
     ref.current = false;
@@ -16,20 +16,27 @@ export const useLogFile = () => {
 
   useEffect(()=>{
     setMount();
-  },[]);
+    printLogs();
+  },[state]);
 };
 
-const ActualList = memo(()=>{
-  const [state] = useState(0);
+const ActualList = ()=>{
+  const [state, setState] = useState(10);
 
-  useLogFile();
+  useLogFile(state);
+
+  // useEffect(()=>{
+  //   setTimeout(()=>{
+  //     setState(20)
+  //   },20000)
+  // },[])
 
   return (
     <ScrollView
       accessible
       accessibilityLabel={'customScrollView'}
     >
-      {Array.from({length:10}).map((_,index)=>(
+      {Array.from({length:state}).map((_,index)=>(
         <View
           key={index}
           accessible
@@ -40,17 +47,19 @@ const ActualList = memo(()=>{
             accessible
             accessibilityLabel={`listTextView${index}`}
           >
-            {`Item index: ${index}, current state: ${state}`}
+            {`Item index: ${index}`}
           </Text>
         </View>
       ))}
     </ScrollView>
   );
-});
+
+  // return  <View style={{backgroundColor: "grey", width:100,height:100}} accessible accessibilityLabel={"customView"} />
+};
 
 // ActualList.displayName = '---------------------------------------------------------------------------';
 
-export const DummyFlatList = memo(()=>{
+export const DummyFlatList = ()=>{
   const [state, setState] = useState(false);
 
   // const onPress = useCallback(()=>{
@@ -69,7 +78,7 @@ export const DummyFlatList = memo(()=>{
       {state && <ActualList />}
     </>
   );
-});
+};
 
 // const testRenderer = TestRenderer.create(
 //   <ActualList />

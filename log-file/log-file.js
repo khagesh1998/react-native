@@ -11,16 +11,17 @@
 'use strict';
 
 let renderCount = 0;
-const itemCount = 0;
-const itemList = [];
-const scrollViewList = [];
+let itemCount = 0;
+let itemList = [];
+let scrollViewList = [];
 let startTime = 0;
 let mountTime = 0;
-var totalEnqueueTime = 0;
+let totalEnqueueTime = 0;
 
 
 
 function reactElementLog(element: any){
+  // console.log("==================customView", element?.props?.accessibilityLabel)
   ++renderCount;
   // console.log("react.development", ++itemCount, renderCount , element);
   if (element?.props?.accessibilityLabel?.includes('listTextView')){
@@ -42,6 +43,17 @@ function setStart(){
 
 function setMount(){
   mountTime = Date.now();
+}
+
+let startSetStateTime = 0;
+let endSetStateTime = 0;
+
+function startSetState(){
+  startSetStateTime = Date.now()
+}
+
+function endSetState(){
+  endSetStateTime = Date.now()
 }
 
 function addEnqueueNativeCall(time: number){
@@ -67,57 +79,43 @@ function queueLog(props){
   queueEndTime = currentTime;
 }
 
-function logTime(){
-  console.info("----------------------------- console logs -----------------------------")
-  const a = Date.now();
-  for(let i=0;i<10;i++){
-    console.log("simple log")
-  }
-  console.info("------------ type1", Date.now() - a);
 
-  const b = Date.now();
-  for(let i=0;i<10;i++){
-    console.log({
-      a:10,
-      b:10,
-      c:10,
-      d:10,
-      e:10,
-      f:10,
-      g:10,
-      h:10,
-      i:10,
-    })
-  }
-  console.info("------------ type2", Date.now() - b);
+function printLogs(){
+  setTimeout(()=>{
+    console.log("---------------------------- logs -------------------------------")
+    const minItemTime = Math.min.apply(Math, itemList);
+    const maxItemTime = Math.max.apply(Math, itemList);
+    console.info('items: ', minItemTime, maxItemTime, maxItemTime - minItemTime);
 
-  const c = Date.now();
-  for(let i=0;i<100;i++){
-    console.log("simple log")
-  }
-  console.info("------------ type3", Date.now() - c);
+    const minScrollViewTime = Math.min.apply(Math, scrollViewList);
+    const maxScrollViewTime = Math.max.apply(Math, scrollViewList);
+    console.info('scrollView: ', minScrollViewTime, maxScrollViewTime, maxScrollViewTime - minScrollViewTime);
+
+    console.info({ 'startTime': startTime, 'mountTime': mountTime });
+    console.info('totalTime', Math.max(maxScrollViewTime,maxItemTime) - startTime);
+
+    console.log(":::: queueTime: ", queueStartTime, queueEndTime, queueEndTime - queueStartTime);
+    console.log("setState", startSetStateTime, endSetStateTime, endSetStateTime - startSetStateTime);
+
+    itemList = [];
+    scrollViewList = [];
+    queueStartTime = 0;
+    queueEndTime = 0;
+    startSetStateTime = 0;
+    endSetStateTime = 0;
+    startTime = 0;
+
+  },20000);
 }
-
-setTimeout(()=>{
-  const minItemTime = Math.min.apply(Math, itemList);
-  const maxItemTime = Math.max.apply(Math, itemList);
-  console.info('items: ', minItemTime, maxItemTime, maxItemTime - minItemTime);
-
-  const minScrollViewTime = Math.min.apply(Math, scrollViewList);
-  const maxScrollViewTime = Math.max.apply(Math, scrollViewList);
-  console.info('scrollView: ', minScrollViewTime, maxScrollViewTime, maxScrollViewTime - minScrollViewTime);
-
-  console.info({ 'startTime': startTime, 'mountTime': mountTime });
-  console.info('totalTime', Math.max(maxScrollViewTime,maxItemTime) - startTime);
-
-  console.log(":::: queueTime: ", queueStartTime, queueEndTime, queueEndTime - queueStartTime);
-},20000);
 
 module.exports = {
   reactElementLog,
   setStart,
   setMount,
   addEnqueueNativeCall,
-  queueLog
+  queueLog,
+  printLogs,
+  startSetState,
+  endSetState
 };
 

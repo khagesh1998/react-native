@@ -3871,7 +3871,9 @@ function dispatchSetState(fiber, queue, action) {
       } finally {
       }
     action = requestEventTime();
+    logFile.startSetState();
     fiber = scheduleUpdateOnFiber(fiber, lane, action);
+    logFile.endSetState();
     null !== fiber && entangleTransitionUpdate(fiber, queue, lane);
   }
 }

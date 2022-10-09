@@ -336,6 +336,7 @@ jsi::Value UIManagerBinding::get(
   }
 
   if (methodName == "appendChild") {
+//    LOG(INFO) << "--------------------------appendChild======================";
     return jsi::Function::createFromHostFunction(
         runtime,
         name,
@@ -345,6 +346,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+//          LOG(INFO) << "--------------------------appendChild return **********************" << arguments[1]->toString(runtime);
           uiManager->appendChild(
               shadowNodeFromValue(runtime, arguments[0]),
               shadowNodeFromValue(runtime, arguments[1]));
