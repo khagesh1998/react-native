@@ -81,31 +81,32 @@ function queueLog(props){
 
 
 function printLogs(){
-  setTimeout(()=>{
-    console.log("---------------------------- logs -------------------------------")
-    const minItemTime = Math.min.apply(Math, itemList);
-    const maxItemTime = Math.max.apply(Math, itemList);
-    console.info('items: ', minItemTime, maxItemTime, maxItemTime - minItemTime);
-
-    const minScrollViewTime = Math.min.apply(Math, scrollViewList);
-    const maxScrollViewTime = Math.max.apply(Math, scrollViewList);
-    console.info('scrollView: ', minScrollViewTime, maxScrollViewTime, maxScrollViewTime - minScrollViewTime);
-
-    console.info({ 'startTime': startTime, 'mountTime': mountTime });
-    console.info('totalTime', Math.max(maxScrollViewTime,maxItemTime) - startTime);
-
-    console.log(":::: queueTime: ", queueStartTime, queueEndTime, queueEndTime - queueStartTime);
-    console.log("setState", startSetStateTime, endSetStateTime, endSetStateTime - startSetStateTime);
-
-    itemList = [];
-    scrollViewList = [];
-    queueStartTime = 0;
-    queueEndTime = 0;
-    startSetStateTime = 0;
-    endSetStateTime = 0;
-    startTime = 0;
-
-  },20000);
+  return
+  // setTimeout(()=>{
+  //   console.log("---------------------------- logs -------------------------------")
+  //   const minItemTime = Math.min.apply(Math, itemList);
+  //   const maxItemTime = Math.max.apply(Math, itemList);
+  //   console.info('items: ', minItemTime, maxItemTime, maxItemTime - minItemTime);
+  //
+  //   const minScrollViewTime = Math.min.apply(Math, scrollViewList);
+  //   const maxScrollViewTime = Math.max.apply(Math, scrollViewList);
+  //   console.info('scrollView: ', minScrollViewTime, maxScrollViewTime, maxScrollViewTime - minScrollViewTime);
+  //
+  //   console.info({ 'startTime': startTime, 'mountTime': mountTime });
+  //   console.info('totalTime', Math.max(maxScrollViewTime,maxItemTime) - startTime);
+  //
+  //   console.log(":::: queueTime: ", queueStartTime, queueEndTime, queueEndTime - queueStartTime);
+  //   console.log("setState", startSetStateTime, endSetStateTime, endSetStateTime - startSetStateTime);
+  //
+  //   itemList = [];
+  //   scrollViewList = [];
+  //   queueStartTime = 0;
+  //   queueEndTime = 0;
+  //   startSetStateTime = 0;
+  //   endSetStateTime = 0;
+  //   startTime = 0;
+  //
+  // },20000);
 }
 
 module.exports = {

@@ -518,15 +518,29 @@ public class UIManagerModule extends ReactContextBaseJavaModule
     queueEndTime = currentTime;
   }
 
-  public void printQueueLogs(){
-    Log.d("onBatchComplete","------------------------------------------- onBatchComplete----------------------------------------");
-    Log.d("NativeQueueTime","queueStartTime: " + queueStartTime + ", queueEndTime: " + queueEndTime + ", diff: " + (queueEndTime - queueStartTime));
+
+
+  public static long uiManagerCreateViewStartTime = 0;
+  public static long uiManagerCreateViewEndTime = 0;
+  public static int uiManagerCreateViewCount = 0;
+
+  public void createViewLog(int tag){
+    if(tag<=5){
+      return;
+    }
+    uiManagerCreateViewCount++;
+    final long time = System.currentTimeMillis();
+    if(uiManagerCreateViewStartTime == 0) {
+      uiManagerCreateViewStartTime = time;
+    }
+    uiManagerCreateViewEndTime = time;
   }
 
   @ReactMethod
   public void createView(int tag, String className, int rootViewTag, ReadableMap props) {
-    queueLog(props);
+//    queueLog(props);
 //    Log.d("NativeCreateView", tag + ", " + className + ", " + rootViewTag + ", " + System.currentTimeMillis() + ":::::" + props.toHashMap());
+    createViewLog(tag);
     if (DEBUG) {
       String message =
           "(UIManager.createView) tag: " + tag + ", class: " + className + ", props: " + props;
@@ -587,6 +601,22 @@ public class UIManagerModule extends ReactContextBaseJavaModule
         viewTag, moveFrom, moveTo, addChildTags, addAtIndices, removeFrom);
   }
 
+  public static long uiManagerSetChildrenStartTime = 0;
+  public static long uiManagerSetChildrenEndTime = 0;
+  public static int uiManagerSetChildrenCount = 0;
+
+  public void setChildrenLog(int tag){
+    if(tag<=5){
+      return;
+    }
+    uiManagerSetChildrenCount++;
+    final long time = System.currentTimeMillis();
+    if(uiManagerSetChildrenStartTime == 0) {
+      uiManagerSetChildrenStartTime = time;
+    }
+    uiManagerSetChildrenEndTime = time;
+  }
+
   /**
    * Interface for fast tracking the initial adding of views. Children view tags are assumed to be
    * in order
@@ -596,6 +626,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule
    */
   @ReactMethod
   public void setChildren(int viewTag, ReadableArray childrenTags) {
+    setChildrenLog(viewTag);
     if (DEBUG) {
       String message = "(UIManager.setChildren) tag: " + viewTag + ", children: " + childrenTags;
       FLog.d(ReactConstants.TAG, message);
@@ -807,6 +838,17 @@ public class UIManagerModule extends ReactContextBaseJavaModule
     mUIImplementation.configureNextLayoutAnimation(config, success);
   }
 
+  public void printLogs(){
+//    Log.d("onBatchComplete","------------------------------------------- onBatchComplete----------------------------------------");
+//    Log.d("NativeQueueTime","queueStartTime: " + queueStartTime + ", queueEndTime: " + queueEndTime + ", diff: " + (queueEndTime - queueStartTime));
+    Log.d("onBatchComplete","************************************* onBatchComplete *************************************");
+    Log.d("createView", uiManagerCreateViewStartTime + " - " + uiManagerCreateViewEndTime + " : " + (uiManagerCreateViewEndTime - uiManagerCreateViewStartTime));
+    Log.d("createViewCount", uiManagerCreateViewCount + "");
+    Log.d("setChildren", uiManagerSetChildrenStartTime + " - " + uiManagerSetChildrenEndTime + " : " + (uiManagerSetChildrenEndTime - uiManagerSetChildrenStartTime));
+    Log.d("setChildrenCount", uiManagerSetChildrenCount + "");
+    Log.d("bridgeCallsTime", "" + (uiManagerSetChildrenEndTime - uiManagerCreateViewStartTime));
+  }
+
   /**
    * To implement the transactional requirement mentioned in the class javadoc, we only commit UI
    * changes to the actual view hierarchy once a batch of JS->Java calls have been completed. We
@@ -823,7 +865,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule
    */
   @Override
   public void onBatchComplete() {
-    printQueueLogs();
+    printLogs();
     int batchId = mBatchId;
     mBatchId++;
 

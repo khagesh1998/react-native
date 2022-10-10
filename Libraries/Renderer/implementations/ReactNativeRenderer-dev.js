@@ -14,6 +14,7 @@
 'use strict';
 
 const logFile = require('../../../log-file/log-file')
+const logFileProd = require('../../../log-file/log-file.prod')
 
 if (__DEV__) {
   (function() {
@@ -5290,6 +5291,7 @@ function createInstance(
   var updatePayload = create(props, viewConfig.validAttributes);
   console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload)
   logFile.queueLog(updatePayload)
+  logFileProd.uiManagerCreateView()
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
     viewConfig.uiViewClassName, // viewName
@@ -5320,6 +5322,7 @@ function createTextInstance(
   var tag = allocateTag();
   console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text)
   logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
+  logFileProd.uiManagerCreateView()
   ReactNativePrivateInterface.UIManager.createView(
     tag, // reactTag
     "RCTRawText", // viewName
@@ -5350,7 +5353,8 @@ function finalizeInitialChildren(
       : child._nativeTag;
   });
 
-  console.log("uimanager.setChildren")
+  logFileProd.uiManagerSetChildren()
+  console.log("uimanager.setChildren finalizeInitialChildren", parentInstance._nativeTag, nativeTags)
   ReactNativePrivateInterface.UIManager.setChildren(
     parentInstance._nativeTag, // containerTag
     nativeTags // reactTags
@@ -5446,7 +5450,7 @@ function appendChild(parentInstance, child) {
 }
 function appendChildToContainer(parentInstance, child) {
   var childTag = typeof child === "number" ? child : child._nativeTag;
-  console.log("uimanager.setChildren")
+  console.log("uimanager.setChildren appendChildToContainer")
   ReactNativePrivateInterface.UIManager.setChildren(
     parentInstance, // containerTag
     [childTag] // reactTags
@@ -11832,9 +11836,11 @@ function dispatchSetState(fiber, queue, action) {
     var eventTime = requestEventTime();
     console.log("start", Date.now(),fiber, lane, eventTime)
     logFile.startSetState();
+    logFileProd.dispatchSetStateStart()
     var root = scheduleUpdateOnFiber(fiber, lane, eventTime);
     console.log("end", Date.now(),root)
     logFile.endSetState();
+    logFileProd.dispatchSetStateEnd()
 
     if (root !== null) {
       entangleTransitionUpdate(root, queue, lane);
@@ -13781,6 +13787,7 @@ function bubbleProperties(completedWork) {
 
 function completeWork(current, workInProgress, renderLanes) {
   console.log("complete work: ", workInProgress.type, workInProgress)
+  logFileProd.completeWork()
   var newProps = workInProgress.pendingProps; // Note: This intentionally doesn't check if we're hydrating because comparing
   // to the current tree provider fiber is just as fast and less error-prone.
   // Ideally we would have a special version of the work loop only
@@ -16856,6 +16863,7 @@ function attemptEarlyBailoutIfNoScheduledUpdate(
 
 function beginWork(current, workInProgress, renderLanes) {
   console.log("begin work: ", workInProgress.type, workInProgress)
+  logFileProd.beginWork()
   {
     if (workInProgress._debugNeedsRemount && current !== null) {
       // This will restart the begin phase with a new fiber.
@@ -18647,6 +18655,7 @@ function commitDeletion(finishedRoot, current, nearestMountedAncestor) {
 
 function commitWork(current, finishedWork) {
   console.log("commit work: ", finishedWork.type, finishedWork)
+  logFileProd.commitWork()
   switch (finishedWork.tag) {
     case FunctionComponent:
     case ForwardRef:

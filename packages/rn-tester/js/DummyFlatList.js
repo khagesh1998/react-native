@@ -1,7 +1,8 @@
-import React, { memo, useState, useEffect, useRef } from "react";
+import React, { memo, useState, useEffect, useRef, useLayoutEffect } from "react";
 
 import {ScrollView, Text,View,LogBox} from 'react-native';
 import { setMount, setStart, printLogs } from "../../../log-file/log-file";
+import { setLayoutEffect, setStateEnd, setStateStart } from "../../../log-file/log-file.prod";
 
 // import TestRenderer from 'react-test-renderer';
 
@@ -23,13 +24,21 @@ export const useLogFile = (state) => {
 const ActualList = ()=>{
   const [state, setState] = useState(10);
 
-  useLogFile(state);
+  // useLogFile(state);
 
   // useEffect(()=>{
   //   setTimeout(()=>{
   //     setState(20)
   //   },20000)
   // },[])
+
+  useEffect(()=>{
+    setStateEnd()
+  },[])
+
+  useLayoutEffect(()=>{
+    setLayoutEffect()
+  },[])
 
   return (
     <ScrollView
@@ -68,8 +77,9 @@ export const DummyFlatList = ()=>{
 
   useEffect(()=>{
     setTimeout(()=>{
+      setStateStart()
       setState(true);
-    },5000);
+    },10000);
   },[]);
 
   return (

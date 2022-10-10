@@ -16,7 +16,8 @@ require("react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore");
 var ReactNativePrivateInterface = require("react-native/Libraries/ReactPrivate/ReactNativePrivateInterface"),
   React = require("react"),
   Scheduler = require("scheduler");
-const logFile = require("../../../log-file/log-file");
+// const logFile = require("../../../log-file/log-file");
+const logFileProd = require("../../../log-file/log-file.prod");
 function invokeGuardedCallbackImpl(name, func, context, a, b, c, d, e, f) {
   var funcArgs = Array.prototype.slice.call(arguments, 3);
   try {
@@ -2006,6 +2007,7 @@ function finalizeInitialChildren(parentInstance) {
   var nativeTags = parentInstance._children.map(function(child) {
     return "number" === typeof child ? child : child._nativeTag;
   });
+  logFileProd.uiManagerSetChildren()
   ReactNativePrivateInterface.UIManager.setChildren(
     parentInstance._nativeTag,
     nativeTags
@@ -3871,9 +3873,11 @@ function dispatchSetState(fiber, queue, action) {
       } finally {
       }
     action = requestEventTime();
-    logFile.startSetState();
+    // logFile.startSetState();
+    logFileProd.dispatchSetStateStart()
     fiber = scheduleUpdateOnFiber(fiber, lane, action);
-    logFile.endSetState();
+    logFileProd.dispatchSetStateEnd()
+    // logFile.endSetState();
     null !== fiber && entangleTransitionUpdate(fiber, queue, lane);
   }
 }
@@ -4308,6 +4312,7 @@ function bubbleProperties(completedWork) {
   return didBailout;
 }
 function completeWork(current, workInProgress, renderLanes) {
+  logFileProd.completeWork()
   var newProps = workInProgress.pendingProps;
   popTreeContext(workInProgress);
   switch (workInProgress.tag) {
@@ -4379,7 +4384,8 @@ function completeWork(current, workInProgress, renderLanes) {
           type.validAttributes
         );
         // console.log("createView", current,type.uiViewClassName,renderLanes, Date.now())
-        logFile.queueLog(updatePayload)
+        // logFile.queueLog(updatePayload)
+        logFileProd.uiManagerCreateView()
         ReactNativePrivateInterface.UIManager.createView(
           current,
           type.uiViewClassName,
@@ -4420,7 +4426,8 @@ function completeWork(current, workInProgress, renderLanes) {
           );
         renderLanes = allocateTag();
         // console.log("createView", renderLanes,"RCTRawText",current, Date.now())
-        logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
+        // logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
+        logFileProd.uiManagerCreateView()
         ReactNativePrivateInterface.UIManager.createView(
           renderLanes,
           "RCTRawText",
@@ -5747,10 +5754,12 @@ function insertOrAppendPlacementNodeIntoContainer(node, before, parent) {
     if (((node = node.stateNode), before)) {
       if ("number" === typeof parent)
         throw Error("Container does not support insertBefore operation");
-    } else
+    } else {
+      logFileProd.uiManagerSetChildren()
       ReactNativePrivateInterface.UIManager.setChildren(parent, [
-        "number" === typeof node ? node : node._nativeTag
+        "number" === typeof node ? node : node._nativeTag,
       ]);
+    }
   else if (4 !== tag && ((node = node.child), null !== node))
     for (
       insertOrAppendPlacementNodeIntoContainer(node, before, parent),
@@ -5940,6 +5949,7 @@ function unmountHostComponents(
   }
 }
 function commitWork(current, finishedWork) {
+  logFileProd.commitWork()
   switch (finishedWork.tag) {
     case 0:
     case 11:
@@ -7357,6 +7367,7 @@ function resolveRetryWakeable(boundaryFiber, wakeable) {
 }
 var beginWork$1;
 beginWork$1 = function(current, workInProgress, renderLanes) {
+  logFileProd.beginWork()
   if (null !== current)
     if (
       current.memoizedProps !== workInProgress.pendingProps ||
