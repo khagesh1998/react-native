@@ -16,6 +16,7 @@ require("react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore");
 var ReactNativePrivateInterface = require("react-native/Libraries/ReactPrivate/ReactNativePrivateInterface"),
   React = require("react"),
   Scheduler = require("scheduler");
+const logFileProd = require("../../../log-file/log-file.prod");
 function invokeGuardedCallbackImpl(name, func, context, a, b, c, d, e, f) {
   var funcArgs = Array.prototype.slice.call(arguments, 3);
   try {
@@ -3895,7 +3896,9 @@ function dispatchSetState(fiber, queue, action) {
       } finally {
       }
     action = requestEventTime();
+    logFileProd.dispatchSetStateStart()
     fiber = scheduleUpdateOnFiber(fiber, lane, action);
+    logFileProd.dispatchSetStateEnd()
     null !== fiber && entangleTransitionUpdate(fiber, queue, lane);
   }
 }
@@ -4282,11 +4285,13 @@ appendAllChildren = function(
       needsVisibilityToggle &&
         isHidden &&
         (instance = cloneHiddenInstance(instance));
+      logFileProd.fabricUiManagerAppendChild()
       appendChildNode(parent.node, instance.node);
     } else if (6 === node.tag) {
       instance = node.stateNode;
       if (needsVisibilityToggle && isHidden)
         throw Error("Not yet implemented.");
+      logFileProd.fabricUiManagerAppendChild()
       appendChildNode(parent.node, instance.node);
     } else if (4 !== node.tag)
       if (22 === node.tag && null !== node.memoizedState)
@@ -4458,6 +4463,7 @@ function bubbleProperties(completedWork) {
   return didBailout;
 }
 function completeWork(current, workInProgress, renderLanes) {
+  logFileProd.completeWork()
   var newProps = workInProgress.pendingProps;
   popTreeContext(workInProgress);
   switch (workInProgress.tag) {
@@ -5778,6 +5784,7 @@ function detachFiberAfterEffects(fiber) {
   fiber.updateQueue = null;
 }
 function commitWork(current, finishedWork) {
+  logFileProd.commitWork()
   switch (finishedWork.tag) {
     case 0:
     case 11:
@@ -7177,6 +7184,7 @@ function resolveRetryWakeable(boundaryFiber, wakeable) {
 }
 var beginWork$1;
 beginWork$1 = function(current, workInProgress, renderLanes) {
+  logFileProd.beginWork()
   if (null !== current)
     if (
       current.memoizedProps !== workInProgress.pendingProps ||

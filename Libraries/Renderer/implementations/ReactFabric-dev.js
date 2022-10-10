@@ -13,7 +13,8 @@
 
 'use strict';
 
-const logFile = require("../../../log-file/log-file");
+// const logFile = require("../../../log-file/log-file");
+const logFileProd = require("../../../log-file/log-file.prod");
 if (__DEV__) {
   (function() {
 
@@ -5056,6 +5057,8 @@ if (registerEventHandler) {
   /**
    * Register the event emitter with the native bridge
    */
+  console.log("uiManager registerEventHandler", dispatchEvent)
+  logFileProd.fabricUiManagerOtherCalls()
   registerEventHandler(dispatchEvent);
 }
 /**
@@ -5089,6 +5092,8 @@ var ReactFabricHostComponent = /*#__PURE__*/ (function() {
     var stateNode = this._internalInstanceHandle.stateNode;
 
     if (stateNode != null) {
+      console.log("uiManager fabricMeasure", stateNode.node)
+      logFileProd.fabricUiManagerOtherCalls()
       fabricMeasure(
         stateNode.node,
         mountSafeCallback_NOT_REALLY_SAFE(this, callback)
@@ -5100,6 +5105,8 @@ var ReactFabricHostComponent = /*#__PURE__*/ (function() {
     var stateNode = this._internalInstanceHandle.stateNode;
 
     if (stateNode != null) {
+      console.log("uiManager fabricMeasureInWindow", stateNode.node)
+      logFileProd.fabricUiManagerOtherCalls()
       fabricMeasureInWindow(
         stateNode.node,
         mountSafeCallback_NOT_REALLY_SAFE(this, callback)
@@ -5130,6 +5137,8 @@ var ReactFabricHostComponent = /*#__PURE__*/ (function() {
     var fromStateNode = relativeToNativeNode._internalInstanceHandle.stateNode;
 
     if (toStateNode != null && fromStateNode != null) {
+      console.log("uiManager fabricMeasureLayout", toStateNode.node, fromStateNode.node)
+      logFileProd.fabricUiManagerOtherCalls()
       fabricMeasureLayout(
         toStateNode.node,
         fromStateNode.node,
@@ -5249,6 +5258,8 @@ var ReactFabricHostComponent = /*#__PURE__*/ (function() {
   return ReactFabricHostComponent;
 })(); // eslint-disable-next-line no-unused-expressions
 function appendInitialChild(parentInstance, child) {
+  logFileProd.fabricUiManagerAppendChild();
+  console.log("uiManager appendChild", parentInstance.node, child.node)
   appendChildNode(parentInstance.node, child.node);
 }
 function createInstance(
@@ -5274,7 +5285,15 @@ function createInstance(
 
   var updatePayload = create(props, viewConfig.validAttributes);
   // console.log("createView",tag, viewConfig.uiViewClassName,rootContainerInstance, Date.now(), updatePayload, internalInstanceHandle)
-  logFile.queueLog(updatePayload)
+  // logFile.queueLog(updatePayload)
+  console.log("uiManager createNode", {
+    tag, // reactTag
+    uiViewClassName: viewConfig.uiViewClassName, // viewName
+    rootContainerInstance, // rootTag
+    updatePayload, // props
+    internalInstanceHandle // internalInstanceHandle
+  })
+  logFileProd.fabricUiManagerCreateNode()
   var node = createNode(
     tag, // reactTag
     viewConfig.uiViewClassName, // viewName
@@ -5308,7 +5327,15 @@ function createTextInstance(
   var tag = nextReactTag;
   nextReactTag += 2;
   // console.log("createView for text",tag, "RCTRawText",rootContainerInstance, Date.now(),text, internalInstanceHandle)
-  logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
+  // logFile.queueLog({accessibilityLabel:"customAccessibilityLabel"})
+  console.log("uiManager createNode", {
+    tag, // reactTag
+    uiViewClassName:"RCTRawText", // viewName
+    rootContainerInstance, // rootTag
+    text: text,
+    internalInstanceHandle
+  })
+  logFileProd.fabricUiManagerCreateNode()
   var node = createNode(
     tag, // reactTag
     "RCTRawText", // viewName
@@ -5381,6 +5408,8 @@ function shouldSetTextContent(type, props) {
   return false;
 }
 function getCurrentEventPriority() {
+  console.log("uiManager fabricGetCurrentEventPriority")
+  logFileProd.fabricUiManagerOtherCalls()
   var currentEventPriority = fabricGetCurrentEventPriority
     ? fabricGetCurrentEventPriority()
     : null;
@@ -5418,14 +5447,22 @@ function cloneInstance(
 
   if (keepChildren) {
     if (updatePayload !== null) {
+      console.log("uiManager cloneNodeWithNewProps", node, updatePayload)
+      logFileProd.fabricUiManagerOtherCalls()
       clone = cloneNodeWithNewProps(node, updatePayload);
     } else {
+      console.log("uiManager cloneNode", node)
+      logFileProd.fabricUiManagerOtherCalls()
       clone = cloneNode(node);
     }
   } else {
     if (updatePayload !== null) {
+      console.log("uiManager cloneNodeWithNewChildrenAndProps", node, updatePayload)
+      logFileProd.fabricUiManagerOtherCalls()
       clone = cloneNodeWithNewChildrenAndProps(node, updatePayload);
     } else {
+      console.log("uiManager cloneNodeWithNewChildren", node)
+      logFileProd.fabricUiManagerOtherCalls()
       clone = cloneNodeWithNewChildren(node);
     }
   }
@@ -5446,6 +5483,8 @@ function cloneHiddenInstance(instance, type, props, internalInstanceHandle) {
     },
     viewConfig.validAttributes
   );
+  console.log("uiManager cloneNodeWithNewProps", node, updatePayload)
+  logFileProd.fabricUiManagerOtherCalls()
   return {
     node: cloneNodeWithNewProps(node, updatePayload),
     canonical: instance.canonical
@@ -5455,12 +5494,18 @@ function cloneHiddenTextInstance(instance, text, internalInstanceHandle) {
   throw new Error("Not yet implemented.");
 }
 function createContainerChildSet(container) {
+  console.log("uiManager createChildNodeSet", container)
+  logFileProd.fabricUiManagerOtherCalls()
   return createChildNodeSet(container);
 }
 function appendChildToContainerChildSet(childSet, child) {
+  console.log("uiManager appendChildNodeToSet", childSet, child.node)
+  logFileProd.fabricUiManagerOtherCalls()
   appendChildNodeToSet(childSet, child.node);
 }
 function finalizeContainerChildren(container, newChildren) {
+  console.log("uiManager completeRoot", container, newChildren)
+  logFileProd.fabricUiManagerOtherCalls()
   completeRoot(container, newChildren);
 }
 function preparePortalMount(portalInstance) {
@@ -11688,7 +11733,9 @@ function dispatchSetState(fiber, queue, action) {
     }
 
     var eventTime = requestEventTime();
+    logFileProd.dispatchSetStateStart()
     var root = scheduleUpdateOnFiber(fiber, lane, eventTime);
+    logFileProd.dispatchSetStateEnd()
 
     if (root !== null) {
       entangleTransitionUpdate(root, queue, lane);
@@ -13820,6 +13867,8 @@ function bubbleProperties(completedWork) {
 }
 
 function completeWork(current, workInProgress, renderLanes) {
+  // console.log(current, workInProgress, renderLanes,"-----")
+  logFileProd.completeWork()
   var newProps = workInProgress.pendingProps; // Note: This intentionally doesn't check if we're hydrating because comparing
   // to the current tree provider fiber is just as fast and less error-prone.
   // Ideally we would have a special version of the work loop only
@@ -16879,6 +16928,7 @@ function attemptEarlyBailoutIfNoScheduledUpdate(
 }
 
 function beginWork(current, workInProgress, renderLanes) {
+  logFileProd.beginWork()
   {
     if (workInProgress._debugNeedsRemount && current !== null) {
       // This will restart the begin phase with a new fiber.
@@ -18355,6 +18405,7 @@ function commitDeletion(finishedRoot, current, nearestMountedAncestor) {
 }
 
 function commitWork(current, finishedWork) {
+  logFileProd.commitWork()
   {
     switch (finishedWork.tag) {
       case FunctionComponent:

@@ -1,28 +1,28 @@
-import React, { memo, useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 
 import {ScrollView, Text,View,LogBox} from 'react-native';
-import { setMount, setStart, printLogs } from "../../../log-file/log-file";
-import { setLayoutEffect, setStateEnd, setStateStart } from "../../../log-file/log-file.prod";
+// import { setMount, setStart, printLogs } from '../../../log-file/log-file';
+import { setLayoutEffect, setStateEnd, setStateStart } from '../../../log-file/log-file.prod';
 
 // import TestRenderer from 'react-test-renderer';
 
 LogBox.ignoreAllLogs();
 
-export const useLogFile = (state) => {
-  const ref = useRef(true);
-  if (ref.current){
-    ref.current = false;
-    setStart();
-  }
-
-  useEffect(()=>{
-    setMount();
-    printLogs();
-  },[state]);
-};
+// export const useLogFile = (state) => {
+//   const ref = useRef(true);
+//   if (ref.current){
+//     ref.current = false;
+//     setStart();
+//   }
+//
+//   useEffect(()=>{
+//     setMount();
+//     printLogs();
+//   },[state]);
+// };
 
 const ActualList = ()=>{
-  const [state, setState] = useState(10);
+  const [state] = useState(10);
 
   // useLogFile(state);
 
@@ -33,12 +33,12 @@ const ActualList = ()=>{
   // },[])
 
   useEffect(()=>{
-    setStateEnd()
-  },[])
+    setStateEnd();
+  },[]);
 
   useLayoutEffect(()=>{
-    setLayoutEffect()
-  },[])
+    setLayoutEffect();
+  },[]);
 
   return (
     <ScrollView
@@ -77,7 +77,7 @@ export const DummyFlatList = ()=>{
 
   useEffect(()=>{
     setTimeout(()=>{
-      setStateStart()
+      setStateStart();
       setState(true);
     },10000);
   },[]);
@@ -90,8 +90,3 @@ export const DummyFlatList = ()=>{
   );
 };
 
-// const testRenderer = TestRenderer.create(
-//   <ActualList />
-// );
-//
-// console.log('------',testRenderer.toJSON());

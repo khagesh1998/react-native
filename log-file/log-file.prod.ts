@@ -37,6 +37,18 @@ let uiManagerSetChildrenStartTime = 0;
 let uiManagerSetChildrenEndTime = 0;
 let uiManagerSetChildrenCount = 0;
 
+let fabricUiManagerAppendChildStartTime = 0;
+let fabricUiManagerAppendChildEndTime = 0;
+let fabricUiManagerAppendChildCount = 0;
+
+let fabricUiManagerCreateNodeStartTime = 0;
+let fabricUiManagerCreateNodeEndTime = 0;
+let fabricUiManagerCreateNodeCount = 0;
+
+let fabricUiManagerOtherCallsStartTime = 0;
+let fabricUiManagerOtherCallsEndTime = 0;
+let fabricUiManagerOtherCallsCount = 0;
+
 let commitWorkTime = 0;
 
 function clearAll(){
@@ -65,6 +77,18 @@ function clearAll(){
   uiManagerSetChildrenEndTime = 0;
   uiManagerSetChildrenCount = 0;
 
+  fabricUiManagerAppendChildStartTime = 0;
+  fabricUiManagerAppendChildEndTime = 0;
+  fabricUiManagerAppendChildCount = 0;
+
+  fabricUiManagerCreateNodeStartTime = 0;
+  fabricUiManagerCreateNodeEndTime = 0;
+  fabricUiManagerCreateNodeCount = 0;
+
+  fabricUiManagerOtherCallsStartTime = 0;
+  fabricUiManagerOtherCallsEndTime = 0;
+  fabricUiManagerOtherCallsCount = 0;
+
   commitWorkTime = 0;
 }
 
@@ -84,6 +108,14 @@ function printLogs(){
                                           ${uiManagerSetChildrenStartTime} - ${uiManagerSetChildrenEndTime} : ${uiManagerSetChildrenEndTime - uiManagerSetChildrenStartTime}
                             bridgeCalls : ${uiManagerSetChildrenEndTime - uiManagerCreateViewStartTime}
                             
+                            
+                            createNode  : ${fabricUiManagerCreateNodeCount}
+                                          ${fabricUiManagerCreateNodeStartTime} - ${fabricUiManagerCreateNodeEndTime} : ${fabricUiManagerCreateNodeEndTime - fabricUiManagerCreateNodeStartTime}
+                            appendChild : ${fabricUiManagerAppendChildCount}
+                                          ${fabricUiManagerAppendChildStartTime} - ${fabricUiManagerAppendChildEndTime} : ${fabricUiManagerAppendChildEndTime - fabricUiManagerAppendChildStartTime}
+                            others      : ${fabricUiManagerOtherCallsCount}
+                                          ${fabricUiManagerOtherCallsStartTime} - ${fabricUiManagerOtherCallsEndTime} : ${fabricUiManagerOtherCallsEndTime - fabricUiManagerOtherCallsStartTime}
+                            
     commitWork            : ${commitWorkTime}
     dispatchSetStateEnd   : ${dispatchSetStateEndTime}
     setLayoutEffect       : ${setLayoutEffectTime}
@@ -102,6 +134,7 @@ export function dispatchSetStateEnd(){
 
 export function setStateStart(){
   isRenderStarted = true
+  console.log("----------------------------------------------")
   setStateStartTime = Date.now()
 }
 
@@ -167,7 +200,44 @@ export function commitWork(){
   if(!isRenderStarted){
     return
   }
-  commitWorkTime = Date.now()
+  commitWorkTime = Date.now();
+}
+
+export function fabricUiManagerAppendChild(){
+  if(!isRenderStarted){
+    return
+  }
+  fabricUiManagerAppendChildCount++;
+  const time = Date.now();
+  if(!fabricUiManagerAppendChildStartTime){
+    fabricUiManagerAppendChildStartTime = time;
+  }
+  fabricUiManagerAppendChildEndTime = time;
+}
+
+export function fabricUiManagerCreateNode(){
+  if(!isRenderStarted){
+    return
+  }
+  fabricUiManagerCreateNodeCount++;
+  const time = Date.now();
+  if(!fabricUiManagerCreateNodeStartTime){
+    fabricUiManagerCreateNodeStartTime = time;
+  }
+  fabricUiManagerCreateNodeEndTime = time;
+}
+
+// fabricGetCurrentEventPriority, cloneNodeWithNewChildren, createChildNodeSet, appendChildNodeToSet, completeRoot
+export function fabricUiManagerOtherCalls(){
+  if(!isRenderStarted){
+    return
+  }
+  fabricUiManagerOtherCallsCount++;
+  const time = Date.now();
+  if(!fabricUiManagerOtherCallsStartTime){
+    fabricUiManagerOtherCallsStartTime = time;
+  }
+  fabricUiManagerOtherCallsEndTime = time;
 }
 
 
