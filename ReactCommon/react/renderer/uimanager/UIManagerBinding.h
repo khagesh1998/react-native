@@ -72,6 +72,18 @@ class UIManagerBinding : public jsi::HostObject {
    */
   jsi::Value get(jsi::Runtime &runtime, jsi::PropNameID const &name) override;
 
+  long long fabricUiManagerCreateNodeStartTime = 0;
+  long long fabricUiManagerCreateNodeEndTime = 0;
+  int fabricUiManagerCreateNodeCount = 0;
+
+  long long fabricUiManagerAppendChildStartTime = 0;
+  long long fabricUiManagerAppendChildEndTime = 0;
+  int fabricUiManagerAppendChildCount = 0;
+
+  void fabricUiManagerCreateNode(jsi::Value const &value);
+  void fabricUiManagerAppendChild();
+  void fabricUiManagerCompleteRoot();
+
  private:
   std::shared_ptr<UIManager> uiManager_;
   std::unique_ptr<EventHandler const> eventHandler_;

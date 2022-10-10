@@ -16,6 +16,7 @@
 #include <react/renderer/uimanager/primitives.h>
 
 #include <utility>
+#include <chrono>
 
 #include "bindingUtils.h"
 
@@ -144,6 +145,50 @@ void UIManagerBinding::invalidate() const {
   uiManager_->setDelegate(nullptr);
 }
 
+long long getTime(){
+//  auto now = std::chrono::high_resolution_clock::now();
+//  return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+  return std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+}
+
+void UIManagerBinding::fabricUiManagerCreateNode(jsi::Value const &value){
+  int tag = (int)tagFromValue(value);
+  if(tag < 6) {
+    return;
+  }
+  fabricUiManagerCreateNodeCount++;
+  long long time = getTime();
+  if(fabricUiManagerCreateNodeStartTime==0) {
+    fabricUiManagerCreateNodeStartTime = time;
+  }
+  fabricUiManagerCreateNodeEndTime = time;
+}
+
+void UIManagerBinding::fabricUiManagerAppendChild(){
+  if(fabricUiManagerCreateNodeStartTime==0) {
+    return;
+  }
+  fabricUiManagerAppendChildCount++;
+//  auto now = std::chrono::system_clock::now();
+//  long long time = std::chrono::time_point_cast<std::chrono::seconds>(now).count();
+
+  long long time = getTime();
+  if(fabricUiManagerAppendChildStartTime==0) {
+    fabricUiManagerAppendChildStartTime = time;
+  }
+  fabricUiManagerAppendChildEndTime = time;
+}
+
+void UIManagerBinding::fabricUiManagerCompleteRoot(){
+  long long time = getTime();
+  LOG(INFO) << "***************************** Complete Root *****************************";
+  LOG(INFO) << "createNode    : " << fabricUiManagerCreateNodeCount << ", " << fabricUiManagerCreateNodeStartTime << " - " << fabricUiManagerCreateNodeEndTime << " : " << fabricUiManagerCreateNodeEndTime - fabricUiManagerCreateNodeStartTime;
+  LOG(INFO) << "appendNode    : " << fabricUiManagerAppendChildCount << ", " << fabricUiManagerAppendChildStartTime << " - " << fabricUiManagerAppendChildEndTime << " : " << fabricUiManagerAppendChildEndTime - fabricUiManagerAppendChildStartTime;
+  LOG(INFO) << "completeRoot  : " <<  time;
+//  LOG(INFO) << fabricUiManagerCreateNodeStartTime << "," << fabricUiManagerCreateNodeEndTime << "," << fabricUiManagerAppendChildStartTime << "," << fabricUiManagerAppendChildEndTime << "," << time;
+}
+
+
 jsi::Value UIManagerBinding::get(
     jsi::Runtime &runtime,
     jsi::PropNameID const &name) {
@@ -185,7 +230,7 @@ jsi::Value UIManagerBinding::get(
         runtime,
         name,
         5,
-        [uiManager](
+        [uiManager, this](
             jsi::Runtime &runtime,
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
@@ -196,6 +241,8 @@ jsi::Value UIManagerBinding::get(
             react_native_assert(false);
             return jsi::Value::undefined();
           }
+//          LOG(INFO) << "=========================" << tagFromValue(arguments[0]) << "::::" << stringFromValue(runtime, arguments[1]);
+          fabricUiManagerCreateNode(arguments[0]);
           return valueFromShadowNode(
               runtime,
               uiManager->createNode(
@@ -341,12 +388,14 @@ jsi::Value UIManagerBinding::get(
         runtime,
         name,
         2,
-        [uiManager](
+        [uiManager, this](
             jsi::Runtime &runtime,
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
 //          LOG(INFO) << "--------------------------appendChild return **********************" << arguments[1]->toString(runtime);
+//          LOG(INFO) << "--------------------------appendChild return **********************";
+          fabricUiManagerAppendChild();
           uiManager->appendChild(
               shadowNodeFromValue(runtime, arguments[0]),
               shadowNodeFromValue(runtime, arguments[1]));
@@ -393,11 +442,12 @@ jsi::Value UIManagerBinding::get(
         runtime,
         name,
         2,
-        [weakUIManager, uiManager](
+        [weakUIManager, uiManager, this](
             jsi::Runtime &runtime,
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+          fabricUiManagerCompleteRoot();
           auto runtimeSchedulerBinding =
               RuntimeSchedulerBinding::getBinding(runtime);
           auto surfaceId = surfaceIdFromValue(runtime, arguments[0]);
