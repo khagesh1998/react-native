@@ -1942,6 +1942,7 @@ var ReactFabricHostComponent = (function() {
   };
   _proto.measure = function(callback) {
     var stateNode = this._internalInstanceHandle.stateNode;
+    null != stateNode && (logFileProd.fabricUiManagerOtherCalls());
     null != stateNode &&
       fabricMeasure(
         stateNode.node,
@@ -1950,6 +1951,7 @@ var ReactFabricHostComponent = (function() {
   };
   _proto.measureInWindow = function(callback) {
     var stateNode = this._internalInstanceHandle.stateNode;
+    null != stateNode && (logFileProd.fabricUiManagerOtherCalls())
     null != stateNode &&
       fabricMeasureInWindow(
         stateNode.node,
@@ -1964,6 +1966,7 @@ var ReactFabricHostComponent = (function() {
       var toStateNode = this._internalInstanceHandle.stateNode;
       relativeToNativeNode =
         relativeToNativeNode._internalInstanceHandle.stateNode;
+      null != toStateNode && null != relativeToNativeNode && logFileProd.fabricUiManagerOtherCalls()
       null != toStateNode &&
         null != relativeToNativeNode &&
         fabricMeasureLayout(
@@ -2026,6 +2029,7 @@ function createTextInstance(
 ) {
   hostContext = nextReactTag;
   nextReactTag += 2;
+  logFileProd.fabricUiManagerCreateNode()
   return {
     node: createNode(
       hostContext,
@@ -2046,6 +2050,7 @@ function cloneHiddenInstance(instance) {
     { style: { display: "none" } },
     instance.canonical.viewConfig.validAttributes
   );
+  logFileProd.fabricUiManagerOtherCalls()
   return {
     node: cloneNodeWithNewProps(node, JSCompiler_inline_result),
     canonical: instance.canonical
@@ -4324,11 +4329,13 @@ function appendAllChildrenToContainer(
       needsVisibilityToggle &&
         isHidden &&
         (instance = cloneHiddenInstance(instance));
+      logFileProd.fabricUiManagerOtherCalls()
       appendChildNodeToSet(containerChildSet, instance.node);
     } else if (6 === node.tag) {
       instance = node.stateNode;
       if (needsVisibilityToggle && isHidden)
         throw Error("Not yet implemented.");
+      logFileProd.fabricUiManagerOtherCalls()
       appendChildNodeToSet(containerChildSet, instance.node);
     } else if (4 !== node.tag)
       if (22 === node.tag && null !== node.memoizedState)
@@ -4353,10 +4360,12 @@ updateHostContainer = function(current, workInProgress) {
   var portalOrRoot = workInProgress.stateNode;
   if (!hadNoMutationsEffects(current, workInProgress)) {
     current = portalOrRoot.containerInfo;
+    logFileProd.fabricUiManagerOtherCalls()
     var newChildSet = createChildNodeSet(current);
     appendAllChildrenToContainer(newChildSet, workInProgress, !1, !1);
     portalOrRoot.pendingChildren = newChildSet;
     workInProgress.flags |= 4;
+    logFileProd.fabricUiManagerOtherCalls()
     completeRoot(current, newChildSet);
   }
 };
@@ -4385,6 +4394,7 @@ updateHostComponent = function(current, workInProgress, type, newProps) {
       ? (workInProgress.stateNode = type)
       : ((newProps = updatePayload),
         (oldProps = type.node),
+        (logFileProd.fabricUiManagerOtherCalls()),
         (type = {
           node: current
             ? null !== newProps
@@ -4528,6 +4538,7 @@ function completeWork(current, workInProgress, renderLanes) {
         requiredContext(contextStackCursor$1.current);
         current = nextReactTag;
         nextReactTag += 2;
+        logFileProd.fabricUiManagerOtherCalls()
         type = getViewConfigForType(type);
         var updatePayload = diffProperties(
           null,
@@ -4535,6 +4546,7 @@ function completeWork(current, workInProgress, renderLanes) {
           newProps,
           type.validAttributes
         );
+        logFileProd.fabricUiManagerCreateNode()
         renderLanes = createNode(
           current,
           type.uiViewClassName,
@@ -5894,8 +5906,10 @@ function commitMutationEffects(root, firstChild) {
               case 5:
                 safelyDetachRef(current, root);
                 break;
-              case 4:
+              case 4: {
+                logFileProd.fabricUiManagerOtherCalls()
                 createChildNodeSet(current.stateNode.containerInfo);
+              }
             }
             if (null !== node.child)
               (node.child.return = node), (node = node.child);
@@ -6141,19 +6155,22 @@ function requestUpdateLane(fiber) {
       currentEventTransitionLane
     );
   fiber = currentUpdatePriority;
-  if (0 === fiber)
+  if (0 === fiber) {
+    (fiber = fabricGetCurrentEventPriority) && (logFileProd.fabricUiManagerOtherCalls())
     a: {
       fiber = fabricGetCurrentEventPriority
         ? fabricGetCurrentEventPriority()
         : null;
-      if (null != fiber)
+      if (null != fiber) {
         switch (fiber) {
           case FabricDiscretePriority:
             fiber = 1;
             break a;
         }
+      }
       fiber = 16;
     }
+  }
   return fiber;
 }
 function scheduleUpdateOnFiber(fiber, lane, eventTime) {

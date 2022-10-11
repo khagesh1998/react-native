@@ -185,7 +185,7 @@ void UIManagerBinding::fabricUiManagerCompleteRoot(){
   LOG(INFO) << "createNode    : " << fabricUiManagerCreateNodeCount << ", " << fabricUiManagerCreateNodeStartTime << " - " << fabricUiManagerCreateNodeEndTime << " : " << fabricUiManagerCreateNodeEndTime - fabricUiManagerCreateNodeStartTime;
   LOG(INFO) << "appendNode    : " << fabricUiManagerAppendChildCount << ", " << fabricUiManagerAppendChildStartTime << " - " << fabricUiManagerAppendChildEndTime << " : " << fabricUiManagerAppendChildEndTime - fabricUiManagerAppendChildStartTime;
   LOG(INFO) << "completeRoot  : " <<  time;
-//  LOG(INFO) << fabricUiManagerCreateNodeStartTime << "," << fabricUiManagerCreateNodeEndTime << "," << fabricUiManagerAppendChildStartTime << "," << fabricUiManagerAppendChildEndTime << "," << time;
+  LOG(INFO) << fabricUiManagerCreateNodeStartTime << "," << fabricUiManagerCreateNodeEndTime << "," << fabricUiManagerAppendChildStartTime << "," << fabricUiManagerAppendChildEndTime << "," << time << ",";
 }
 
 

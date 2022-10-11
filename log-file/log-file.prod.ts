@@ -122,6 +122,11 @@ function printLogs(){
     end (Mount)           : ${setStateEndTime}
   `)
 
+  console.log(`
+    ----------------------------------- Excel -----------------------------------
+    ${setStateStartTime},${dispatchSetStateStartTime},${beginWorkStartTime},${completeWorkEndTime},,${commitWorkTime},,    ${fabricUiManagerCreateNodeStartTime},${fabricUiManagerCreateNodeEndTime},${fabricUiManagerAppendChildStartTime},${fabricUiManagerAppendChildEndTime},${fabricUiManagerOtherCallsEndTime},,    ,,,,,,    ,,    ${dispatchSetStateEndTime},${setLayoutEffectTime},${setStateEndTime}  
+    `)
+
 }
 
 export function dispatchSetStateStart(){
@@ -134,7 +139,7 @@ export function dispatchSetStateEnd(){
 
 export function setStateStart(){
   isRenderStarted = true
-  console.log("----------------------------------------------")
+  // console.log("----------------------------------------------")
   setStateStartTime = Date.now()
 }
 
@@ -227,7 +232,7 @@ export function fabricUiManagerCreateNode(){
   fabricUiManagerCreateNodeEndTime = time;
 }
 
-// fabricGetCurrentEventPriority, cloneNodeWithNewChildren, createChildNodeSet, appendChildNodeToSet, completeRoot
+// fabricGetCurrentEventPriority; cloneNodeWithNewChildren; createChildNodeSet; appendChildNodeToSet; completeRoot
 export function fabricUiManagerOtherCalls(){
   if(!isRenderStarted){
     return
