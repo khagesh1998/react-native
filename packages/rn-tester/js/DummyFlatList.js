@@ -22,23 +22,25 @@ LogBox.ignoreAllLogs();
 // };
 
 const ActualList = ()=>{
-  const [state] = useState(10);
+  const [state, setState] = useState(10);
 
   // useLogFile(state);
 
-  // useEffect(()=>{
-  //   setTimeout(()=>{
-  //     setState(20)
-  //   },20000)
-  // },[])
+  useEffect(()=>{
+    setTimeout(()=>{
+      // console.log("--------------------------- start ---------------------");
+      setStateStart();
+      setState(20);
+    },10000);
+  },[]);
 
   useEffect(()=>{
     setStateEnd();
-  },[]);
+  },[state]);
 
   useLayoutEffect(()=>{
     setLayoutEffect();
-  },[]);
+  },[state]);
 
   return (
     <ScrollView

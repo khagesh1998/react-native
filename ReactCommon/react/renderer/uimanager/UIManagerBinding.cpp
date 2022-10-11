@@ -151,11 +151,23 @@ long long getTime(){
   return std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 }
 
+void UIManagerBinding::clearAllLogs(int tag){
+  if(tag == 70){ // Add 100 items to existing 10 items
+    fabricUiManagerCreateNodeCount = 0;
+    fabricUiManagerCreateNodeStartTime = 0;
+    fabricUiManagerCreateNodeEndTime = 0;
+    fabricUiManagerAppendChildCount = 0;
+    fabricUiManagerAppendChildStartTime = 0;
+    fabricUiManagerAppendChildEndTime = 0;
+  }
+}
+
 void UIManagerBinding::fabricUiManagerCreateNode(jsi::Value const &value){
   int tag = (int)tagFromValue(value);
   if(tag < 6) {
     return;
   }
+  clearAllLogs(tag);
   fabricUiManagerCreateNodeCount++;
   long long time = getTime();
   if(fabricUiManagerCreateNodeStartTime==0) {
