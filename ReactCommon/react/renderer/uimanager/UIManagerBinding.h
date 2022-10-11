@@ -83,6 +83,7 @@ class UIManagerBinding : public jsi::HostObject {
   void fabricUiManagerCreateNode(jsi::Value const &value);
   void fabricUiManagerAppendChild();
   void fabricUiManagerCompleteRoot();
+  void clearAllLogs(int tag);
 
  private:
   std::shared_ptr<UIManager> uiManager_;
