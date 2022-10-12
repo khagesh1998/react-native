@@ -17,6 +17,8 @@
 #include <react/renderer/mounting/ShadowViewMutation.h>
 #include <react/renderer/telemetry/TransactionTelemetry.h>
 
+#include <glog/logging.h>
+
 #include "ShadowTreeDelegate.h"
 
 namespace facebook {
@@ -303,6 +305,7 @@ CommitStatus ShadowTree::commit(
   int attempts = 0;
 
   while (true) {
+    LOG(INFO) << "ShadowTree::commit while" << attempts;
     attempts++;
 
     auto status = tryCommit(transaction, commitOptions);
@@ -375,6 +378,8 @@ CommitStatus ShadowTree::tryCommit(
 
     auto newRevisionNumber = oldRevision.number + 1;
 
+    LOG(INFO) << "ShadowTree::tryCommit newRevisionNumber" << newRevisionNumber;
+
     newRootShadowNode = delegate_.shadowTreeWillCommit(
         *this, oldRootShadowNode, newRootShadowNode);
 
@@ -402,6 +407,8 @@ CommitStatus ShadowTree::tryCommit(
 
   emitLayoutEvents(affectedLayoutableNodes);
 
+  LOG(INFO) << "ShadowTree::tryCommit commitMode" << (commitMode == CommitMode::Normal);
+
   if (commitMode == CommitMode::Normal) {
     mount(newRevision);
   }
@@ -415,6 +422,7 @@ ShadowTreeRevision ShadowTree::getCurrentRevision() const {
 }
 
 void ShadowTree::mount(ShadowTreeRevision const &revision) const {
+  LOG(INFO) << "ShadowTree::mount checkMount";
   mountingCoordinator_->push(revision);
   delegate_.shadowTreeDidFinishTransaction(*this, mountingCoordinator_);
 }

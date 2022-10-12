@@ -466,8 +466,11 @@ jsi::Value UIManagerBinding::get(
               RuntimeSchedulerBinding::getBinding(runtime);
           auto surfaceId = surfaceIdFromValue(runtime, arguments[0]);
 
+          LOG(INFO) << "UIManagerBinding::completeRoot" << runtimeSchedulerBinding;
+
           if (runtimeSchedulerBinding &&
               runtimeSchedulerBinding->getIsSynchronous()) {
+              LOG(INFO) << "UIManagerBinding::completeRoot getIsSynchronous" << runtimeSchedulerBinding << ":" << runtimeSchedulerBinding->getIsSynchronous();
             auto weakShadowNodeList =
                 weakShadowNodeListFromValue(runtime, arguments[1]);
             auto shadowNodeList =
