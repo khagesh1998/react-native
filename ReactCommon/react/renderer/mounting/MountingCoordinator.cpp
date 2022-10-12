@@ -7,8 +7,9 @@
 
 #include "MountingCoordinator.h"
 
+#include <glog/CustomLogger.h>
+
 #ifdef RN_SHADOW_TREE_INTROSPECTION
-#include <glog/logging.h>
 #include <sstream>
 #endif
 
@@ -77,6 +78,7 @@ void MountingCoordinator::resetLatestRevision() const {
 
 std::optional<MountingTransaction> MountingCoordinator::pullTransaction()
     const {
+  d11::Logger l("MountingCoordinator::pullTransaction");
   std::lock_guard<std::mutex> lock(mutex_);
 
   auto transaction = std::optional<MountingTransaction>{};

@@ -30,7 +30,7 @@
 #include <react/renderer/uimanager/primitives.h>
 #include <react/utils/ContextContainer.h>
 
-#include <glog/logging.h>
+#include <glog/CustomLogger.h>
 
 using namespace facebook::jni;
 using namespace facebook::jsi;
@@ -487,6 +487,7 @@ std::shared_ptr<FabricMountingManager> Binding::verifyMountingManager(
 
 void Binding::schedulerDidFinishTransaction(
     MountingCoordinator::Shared const &mountingCoordinator) {
+    d11::Logger l("Binding::schedulerDidFinishTransaction");
   auto mountingManager =
       verifyMountingManager("Binding::schedulerDidFinishTransaction");
   if (!mountingManager) {

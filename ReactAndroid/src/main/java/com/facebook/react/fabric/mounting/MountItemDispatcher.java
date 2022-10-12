@@ -13,6 +13,7 @@ import static com.facebook.react.fabric.FabricUIManager.ENABLE_FABRIC_LOGS;
 import static com.facebook.react.fabric.FabricUIManager.IS_DEVELOPMENT_ENVIRONMENT;
 
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.facebook.react.bridge.ReactIgnorableMountingException;
 import com.facebook.react.bridge.ReactNoCrashSoftException;
 import com.facebook.react.bridge.ReactSoftExceptionLogger;
 import com.facebook.react.bridge.RetryableMountingLayerException;
+import com.facebook.react.common.ReactConstants;
 import com.facebook.react.fabric.mounting.mountitems.DispatchCommandMountItem;
 import com.facebook.react.fabric.mounting.mountitems.MountItem;
 import com.facebook.react.fabric.mounting.mountitems.PreAllocateViewMountItem;
@@ -177,6 +179,7 @@ public class MountItemDispatcher {
   @ThreadConfined(UI)
   /** Nothing should call this directly except for `tryDispatchMountItems`. */
   private boolean dispatchMountItems() {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: MountItemDispatcher#dispatchMountItems, " + System.currentTimeMillis());
     if (mReDispatchCounter == 0) {
       mBatchedExecutionTime = 0;
     }
@@ -188,6 +191,7 @@ public class MountItemDispatcher {
     List<MountItem> mountItemsToDispatch = getAndResetMountItems();
 
     if (mountItemsToDispatch == null && viewCommandMountItemsToDispatch == null) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: MountItemDispatcher#dispatchMountItems, " + System.currentTimeMillis());
       return false;
     }
 
@@ -290,6 +294,7 @@ public class MountItemDispatcher {
           if (ReactIgnorableMountingException.isIgnorable(e)) {
             ReactSoftExceptionLogger.logSoftException(TAG, e);
           } else {
+            Log.d(ReactConstants.TAG, "[MAYANT](main) end: MountItemDispatcher#dispatchMountItems, " + System.currentTimeMillis());
             throw e;
           }
         }
@@ -298,6 +303,7 @@ public class MountItemDispatcher {
     }
     Systrace.endSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE);
 
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: MountItemDispatcher#dispatchMountItems, " + System.currentTimeMillis());
     return true;
   }
 
@@ -349,7 +355,9 @@ public class MountItemDispatcher {
           mMountingManager.getSurfaceManager(item.getSurfaceId());
       surfaceMountingManager.executeOnViewAttach(item);
     } else {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) start: MountItemDispatcher#executeOrEnqueue, " + System.currentTimeMillis());
       item.execute(mMountingManager);
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: MountItemDispatcher#executeOrEnqueue, " + System.currentTimeMillis());
     }
   }
 

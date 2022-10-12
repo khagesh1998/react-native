@@ -24,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import androidx.annotation.AnyThread;
@@ -50,6 +51,7 @@ import com.facebook.react.bridge.UIManager;
 import com.facebook.react.bridge.UIManagerListener;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.common.ReactConstants;
 import com.facebook.react.common.build.ReactBuildConfig;
 import com.facebook.react.common.mapbuffer.ReadableMapBuffer;
 import com.facebook.react.config.ReactFeatureFlags;
@@ -83,6 +85,7 @@ import com.facebook.react.uimanager.events.EventDispatcherImpl;
 import com.facebook.react.uimanager.events.LockFreeEventDispatcherImpl;
 import com.facebook.react.views.text.TextLayoutManager;
 import com.facebook.react.views.text.TextLayoutManagerMapBuffer;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -743,6 +746,7 @@ public class FabricUIManager implements UIManager, LifecycleEventListener {
       long layoutEndTime,
       long finishTransactionStartTime,
       long finishTransactionEndTime) {
+    Log.d(ReactConstants.TAG, "[MAYANT](" + Thread.currentThread().getName() + ") start: FabricUIManager#scheduleMountItem, " + System.currentTimeMillis());
     // When Binding.cpp calls scheduleMountItems during a commit phase, it always calls with
     // a BatchMountItem. No other sites call into this with a BatchMountItem, and Binding.cpp only
     // calls scheduleMountItems with a BatchMountItem.
@@ -798,6 +802,7 @@ public class FabricUIManager implements UIManager, LifecycleEventListener {
           ReactMarkerConstants.FABRIC_LAYOUT_END, null, commitNumber, layoutEndTime);
       ReactMarker.logFabricMarker(ReactMarkerConstants.FABRIC_COMMIT_END, null, commitNumber);
     }
+    Log.d(ReactConstants.TAG, "[MAYANT](" + Thread.currentThread().getName() + ") end: FabricUIManager#scheduleMountItem, " + System.currentTimeMillis());
   }
 
   public void setBinding(Binding binding) {
