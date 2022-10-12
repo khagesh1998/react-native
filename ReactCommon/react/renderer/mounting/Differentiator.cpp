@@ -13,6 +13,8 @@
 #include <react/renderer/core/LayoutableShadowNode.h>
 #include <react/renderer/debug/SystraceSection.h>
 #include <algorithm>
+#include <glog/CustomLogger.h>
+
 #include "ShadowView.h"
 
 #ifdef DEBUG_LOGS_DIFFER
@@ -1651,6 +1653,7 @@ ShadowViewNodePair::OwningList sliceChildShadowNodeViewPairsLegacy(
 ShadowViewMutation::List calculateShadowViewMutations(
     ShadowNode const &oldRootShadowNode,
     ShadowNode const &newRootShadowNode) {
+  d11::Logger l("calculateShadowViewMutations");
   SystraceSection s("calculateShadowViewMutations");
 
   // Root shadow nodes must be belong the same family.

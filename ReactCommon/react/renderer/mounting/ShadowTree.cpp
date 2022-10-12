@@ -7,6 +7,7 @@
 
 #include "ShadowTree.h"
 
+#include <glog/CustomLogger.h>
 #include <react/debug/react_native_assert.h>
 #include <react/renderer/components/root/RootComponentDescriptor.h>
 #include <react/renderer/components/view/ViewShadowNode.h>
@@ -299,6 +300,7 @@ CommitStatus ShadowTree::commit(
     ShadowTreeCommitTransaction transaction,
     CommitOptions commitOptions) const {
   SystraceSection s("ShadowTree::commit");
+  d11::Logger l("ShadowTree::commit");
 
   int attempts = 0;
 
@@ -344,6 +346,7 @@ CommitStatus ShadowTree::tryCommit(
   }
 
   if (commitOptions.enableStateReconciliation) {
+    d11::Logger stateLogger ("ShadowTree progress state");
     auto updatedNewRootShadowNode =
         progressState(*newRootShadowNode, *oldRootShadowNode);
     if (updatedNewRootShadowNode) {
@@ -354,13 +357,17 @@ CommitStatus ShadowTree::tryCommit(
 
   // Layout nodes.
   std::vector<LayoutableShadowNode const *> affectedLayoutableNodes{};
-  affectedLayoutableNodes.reserve(1024);
 
-  telemetry.willLayout();
-  telemetry.setAsThreadLocal();
-  newRootShadowNode->layoutIfNeeded(&affectedLayoutableNodes);
-  telemetry.unsetAsThreadLocal();
-  telemetry.didLayout();
+  {
+    d11::Logger layoutLogger("ShadowTree layout");
+    affectedLayoutableNodes.reserve(1024);
+
+    telemetry.willLayout();
+    telemetry.setAsThreadLocal();
+    newRootShadowNode->layoutIfNeeded(&affectedLayoutableNodes);
+    telemetry.unsetAsThreadLocal();
+    telemetry.didLayout();
+  }
 
   // Seal the shadow node so it can no longer be mutated
   newRootShadowNode->sealRecursive();
@@ -415,6 +422,7 @@ ShadowTreeRevision ShadowTree::getCurrentRevision() const {
 }
 
 void ShadowTree::mount(ShadowTreeRevision const &revision) const {
+  d11::Logger l("ShadowTree::mount");
   mountingCoordinator_->push(revision);
   delegate_.shadowTreeDidFinishTransaction(*this, mountingCoordinator_);
 }

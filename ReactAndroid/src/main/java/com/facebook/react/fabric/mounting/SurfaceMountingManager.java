@@ -10,6 +10,7 @@ package com.facebook.react.fabric.mounting;
 import static com.facebook.infer.annotation.ThreadConfined.ANY;
 import static com.facebook.infer.annotation.ThreadConfined.UI;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -25,6 +26,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.RetryableMountingLayerException;
 import com.facebook.react.bridge.SoftAssertions;
 import com.facebook.react.bridge.UiThreadUtil;
+import com.facebook.react.common.ReactConstants;
 import com.facebook.react.common.build.ReactBuildConfig;
 import com.facebook.react.common.mapbuffer.ReadableMapBuffer;
 import com.facebook.react.config.ReactFeatureFlags;
@@ -237,7 +239,9 @@ public class SurfaceMountingManager {
   @UiThread
   @ThreadConfined(UI)
   private void executeViewAttachMountItems() {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#executeviewAttachMountItems, " + System.currentTimeMillis());
     mMountItemExecutor.executeItems(mOnViewAttachItems);
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#executeviewAttachMountItems, " + System.currentTimeMillis());
   }
 
   /**
@@ -312,8 +316,10 @@ public class SurfaceMountingManager {
 
   @UiThread
   public void addViewAt(final int parentTag, final int tag, final int index) {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
     UiThreadUtil.assertOnUiThread();
     if (isStopped()) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       return;
     }
 
@@ -327,12 +333,14 @@ public class SurfaceMountingManager {
               + " - Index: "
               + index;
       FLog.e(TAG, message);
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(message);
     }
     final ViewGroup parentView = (ViewGroup) parentViewState.mView;
     ViewState viewState = getViewState(tag);
     final View view = viewState.mView;
     if (view == null) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(
           "Unable to find view for viewState " + viewState + " and tag " + tag);
     }
@@ -364,6 +372,7 @@ public class SurfaceMountingManager {
       getViewGroupManager(parentViewState).addView(parentView, view, index);
     } catch (IllegalStateException e) {
       // Wrap error with more context for debugging
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(
           "addViewAt: failed to insert view ["
               + tag
@@ -392,11 +401,15 @@ public class SurfaceMountingManager {
             }
           });
     }
+
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
   }
 
   @UiThread
   public void removeViewAt(final int tag, final int parentTag, int index) {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
     if (isStopped()) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
       return;
     }
 
@@ -409,6 +422,7 @@ public class SurfaceMountingManager {
           MountingManager.TAG,
           new IllegalStateException(
               "Unable to find viewState for tag: [" + parentTag + "] for removeViewAt"));
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
       return;
     }
 
@@ -421,12 +435,14 @@ public class SurfaceMountingManager {
               + " - Index: "
               + index;
       FLog.e(TAG, message);
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(message);
     }
 
     final ViewGroup parentView = (ViewGroup) parentViewState.mView;
 
     if (parentView == null) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException("Unable to find view for tag [" + parentTag + "]");
     }
 
@@ -469,6 +485,7 @@ public class SurfaceMountingManager {
                 + index
                 + ": view already removed from parent! Children in parent: "
                 + parentChildrenCount);
+        Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
         return;
       }
 
@@ -520,6 +537,7 @@ public class SurfaceMountingManager {
 
       logViewHierarchy(parentView, true);
 
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(
           "Cannot remove child at index "
               + index
@@ -551,6 +569,8 @@ public class SurfaceMountingManager {
             }
           });
     }
+
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#removeViewAt, " + System.currentTimeMillis());
   }
 
   @UiThread
@@ -561,7 +581,9 @@ public class SurfaceMountingManager {
       @Nullable StateWrapper stateWrapper,
       @Nullable EventEmitterWrapper eventEmitterWrapper,
       boolean isLayoutable) {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#createView, " + System.currentTimeMillis());
     if (isStopped()) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#createView, " + System.currentTimeMillis());
       return;
     }
     // We treat this as a perf problem and not a logical error. View Preallocation or unexpected
@@ -578,6 +600,8 @@ public class SurfaceMountingManager {
 
     createViewUnsafe(
         componentName, reactTag, props, stateWrapper, eventEmitterWrapper, isLayoutable);
+
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#createView, " + System.currentTimeMillis());
   }
 
   /**
@@ -630,6 +654,7 @@ public class SurfaceMountingManager {
   }
 
   public void updateProps(int reactTag, Object props) {
+    Log.d(ReactConstants.TAG, "[MAYANT](" + Thread.currentThread().getName() + ") start: SurfaceMountingManager#updateProps, " + System.currentTimeMillis());
     if (isStopped()) {
       return;
     }
@@ -645,6 +670,7 @@ public class SurfaceMountingManager {
 
     Assertions.assertNotNull(viewState.mViewManager)
         .updateProperties(view, viewState.mCurrentProps);
+    Log.d(ReactConstants.TAG, "[MAYANT](" + Thread.currentThread().getName() + ") end: SurfaceMountingManager#updateProps, " + System.currentTimeMillis());
   }
 
   @Deprecated
@@ -728,18 +754,22 @@ public class SurfaceMountingManager {
 
   @UiThread
   public void updateLayout(int reactTag, int x, int y, int width, int height, int displayType) {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
     if (isStopped()) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       return;
     }
 
     ViewState viewState = getViewState(reactTag);
     // Do not layout Root Views
     if (viewState.mIsRoot) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       return;
     }
 
     View viewToUpdate = viewState.mView;
     if (viewToUpdate == null) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       throw new IllegalStateException("Unable to find View for tag: " + reactTag);
     }
 
@@ -761,6 +791,7 @@ public class SurfaceMountingManager {
     if (viewToUpdate.getVisibility() != visibility) {
       viewToUpdate.setVisibility(visibility);
     }
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
   }
 
   @UiThread
@@ -821,8 +852,10 @@ public class SurfaceMountingManager {
 
   @UiThread
   public void updateState(final int reactTag, @Nullable StateWrapper stateWrapper) {
+    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#updateState, " + System.currentTimeMillis());
     UiThreadUtil.assertOnUiThread();
     if (isStopped()) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateState, " + System.currentTimeMillis());
       return;
     }
 
@@ -834,6 +867,7 @@ public class SurfaceMountingManager {
     ReactViewManagerWrapper viewManager = viewState.mViewManager;
 
     if (viewManager == null) {
+      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateState, " + System.currentTimeMillis());
       throw new IllegalStateException("Unable to find ViewManager for tag: " + reactTag);
     }
     Object extraData =
@@ -847,6 +881,7 @@ public class SurfaceMountingManager {
     if (prevStateWrapper != null) {
       prevStateWrapper.destroyState();
     }
+    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateState, " + System.currentTimeMillis());
   }
 
   @UiThread

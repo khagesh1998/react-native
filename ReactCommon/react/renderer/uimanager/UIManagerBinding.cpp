@@ -7,7 +7,7 @@
 
 #include "UIManagerBinding.h"
 
-#include <glog/logging.h>
+#include <glog/CustomLogger.h>
 #include <jsi/JSIDynamic.h>
 #include <react/debug/react_native_assert.h>
 #include <react/renderer/core/LayoutableShadowNode.h>
@@ -249,6 +249,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.createNode");
           auto eventTarget =
               eventTargetFromValue(runtime, arguments[4], arguments[0]);
           if (!eventTarget) {
@@ -279,6 +280,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.cloneNode");
           return valueFromShadowNode(
               runtime,
               uiManager->cloneNode(
@@ -346,6 +348,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildren");
           return valueFromShadowNode(
               runtime,
               uiManager->cloneNode(
@@ -365,6 +368,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewProps");
           auto const &rawProps = RawProps(runtime, arguments[1]);
           return valueFromShadowNode(
               runtime,
@@ -386,6 +390,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildrenAndProps");
           auto const &rawProps = RawProps(runtime, arguments[1]);
           return valueFromShadowNode(
               runtime,
@@ -409,6 +414,7 @@ jsi::Value UIManagerBinding::get(
             size_t count) noexcept -> jsi::Value {
 //          LOG(INFO) << "--------------------------appendChild return **********************" << arguments[1]->toString(runtime);
 //          LOG(INFO) << "--------------------------appendChild return **********************";
+            d11::Logger l("nativeFabricUIManager.appendChild");
           fabricUiManagerAppendChild();
           uiManager->appendChild(
               shadowNodeFromValue(runtime, arguments[0]),
@@ -426,6 +432,7 @@ jsi::Value UIManagerBinding::get(
            jsi::Value const &thisValue,
            jsi::Value const *arguments,
            size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.createChildSet");
           auto shadowNodeList =
               std::make_shared<SharedShadowNodeList>(SharedShadowNodeList({}));
           return valueFromShadowNodeList(runtime, shadowNodeList);
@@ -441,6 +448,7 @@ jsi::Value UIManagerBinding::get(
            jsi::Value const &thisValue,
            jsi::Value const *arguments,
            size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.appendChildToSet");
           auto shadowNodeList = shadowNodeListFromValue(runtime, arguments[0]);
           auto shadowNode = shadowNodeFromValue(runtime, arguments[1]);
           shadowNodeList->push_back(shadowNode);
@@ -461,6 +469,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
+            d11::Logger l("nativeFabricUIManager.completeRoot");
           fabricUiManagerCompleteRoot();
           auto runtimeSchedulerBinding =
               RuntimeSchedulerBinding::getBinding(runtime);
