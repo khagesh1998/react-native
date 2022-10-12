@@ -152,7 +152,9 @@ long long getTime(){
 }
 
 void UIManagerBinding::clearAllLogs(int tag){
-  if(tag == 70){ // Add 100 items to existing 10 items
+  if(tag == 610){
+    // tag == 70 Add to existing 10 items
+    // tag == 610 Add to existing 100 items
     fabricUiManagerCreateNodeCount = 0;
     fabricUiManagerCreateNodeStartTime = 0;
     fabricUiManagerCreateNodeEndTime = 0;

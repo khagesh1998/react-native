@@ -22,15 +22,15 @@ LogBox.ignoreAllLogs();
 // };
 
 const ActualList = ()=>{
-  const [state, setState] = useState(10);
+  const [state, setState] = useState(100);
 
   // useLogFile(state);
 
   useEffect(()=>{
     setTimeout(()=>{
-      // console.log("--------------------------- start ---------------------");
+      // console.log('--------------------------- start ---------------------');
       setStateStart();
-      setState(20);
+      setState(200);
     },10000);
   },[]);
 

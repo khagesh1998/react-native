@@ -528,6 +528,16 @@ public class UIManagerModule extends ReactContextBaseJavaModule
     if(tag<=5){
       return;
     }
+    // 763 for 100, 87 for 10
+    if(tag == 763){
+      uiManagerCreateViewStartTime = 0;
+      uiManagerCreateViewEndTime = 0;
+      uiManagerCreateViewCount = 0;
+
+      uiManagerSetChildrenStartTime = 0;
+      uiManagerSetChildrenEndTime = 0;
+      uiManagerSetChildrenCount = 0;
+    }
     uiManagerCreateViewCount++;
     final long time = System.currentTimeMillis();
     if(uiManagerCreateViewStartTime == 0) {
@@ -847,6 +857,8 @@ public class UIManagerModule extends ReactContextBaseJavaModule
     Log.d("setChildren", uiManagerSetChildrenStartTime + " - " + uiManagerSetChildrenEndTime + " : " + (uiManagerSetChildrenEndTime - uiManagerSetChildrenStartTime));
     Log.d("setChildrenCount", uiManagerSetChildrenCount + "");
     Log.d("bridgeCallsTime", "" + (uiManagerSetChildrenEndTime - uiManagerCreateViewStartTime));
+    Log.d("Native Logs", "************************************* Native Logs *************************************");
+    Log.d("Excel", "" + uiManagerCreateViewStartTime + "," + uiManagerCreateViewEndTime + "," + uiManagerSetChildrenStartTime + "," + uiManagerSetChildrenEndTime + ",," );
   }
 
   /**
