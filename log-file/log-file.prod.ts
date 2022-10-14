@@ -122,15 +122,15 @@ function printLogs(){
     end (Mount)           : ${setStateEndTime}
   `)
 
-  // console.log(`
-  //   ----------------------------------- Excel -----------------------------------
-  //   ${setStateStartTime},${dispatchSetStateStartTime},${beginWorkStartTime},${completeWorkEndTime},,${commitWorkTime},,    ${fabricUiManagerCreateNodeStartTime},${fabricUiManagerCreateNodeEndTime},${fabricUiManagerAppendChildStartTime},${fabricUiManagerAppendChildEndTime},${fabricUiManagerOtherCallsEndTime},,    ,,,,,,    ,,    ${dispatchSetStateEndTime},${setLayoutEffectTime},${setStateEndTime}
-  //   `)
-
   console.log(`
     ----------------------------------- Excel -----------------------------------
-    ${setStateStartTime},${dispatchSetStateStartTime},${beginWorkStartTime},${completeWorkEndTime},,${commitWorkTime},,    ${uiManagerCreateViewStartTime},${uiManagerCreateViewEndTime},${uiManagerSetChildrenStartTime},${uiManagerSetChildrenEndTime},,,    ,,,,,,    ,,    ${dispatchSetStateEndTime},${setLayoutEffectTime},${setStateEndTime}  
+    ${setStateStartTime},${dispatchSetStateStartTime},${beginWorkStartTime},${completeWorkEndTime},,${commitWorkTime},,    ${fabricUiManagerCreateNodeStartTime},${fabricUiManagerCreateNodeEndTime},${fabricUiManagerAppendChildStartTime},${fabricUiManagerAppendChildEndTime},${fabricUiManagerOtherCallsEndTime},,    ,,,,,,    ,,    ${dispatchSetStateEndTime},${setLayoutEffectTime},${setStateEndTime}
     `)
+
+  // console.log(`
+  //   ----------------------------------- Excel -----------------------------------
+  //   ${setStateStartTime},${dispatchSetStateStartTime},${beginWorkStartTime},${completeWorkEndTime},,${commitWorkTime},,    ${uiManagerCreateViewStartTime},${uiManagerCreateViewEndTime},${uiManagerSetChildrenStartTime},${uiManagerSetChildrenEndTime},,,    ,,,,,,    ,,    ${dispatchSetStateEndTime},${setLayoutEffectTime},${setStateEndTime}
+  //   `)
 
 }
 

@@ -22,7 +22,7 @@ LogBox.ignoreAllLogs();
 // };
 
 const ActualList = ()=>{
-  const [state, setState] = useState(100);
+  const [state, setState] = useState(10);
 
   // useLogFile(state);
 
@@ -30,7 +30,7 @@ const ActualList = ()=>{
     setTimeout(()=>{
       // console.log('--------------------------- start ---------------------');
       setStateStart();
-      setState(200);
+      setState(20);
     },10000);
   },[]);
 

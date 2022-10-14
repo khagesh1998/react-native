@@ -316,10 +316,10 @@ public class SurfaceMountingManager {
 
   @UiThread
   public void addViewAt(final int parentTag, final int tag, final int index) {
-    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
     UiThreadUtil.assertOnUiThread();
     if (isStopped()) {
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       return;
     }
 
@@ -333,14 +333,14 @@ public class SurfaceMountingManager {
               + " - Index: "
               + index;
       FLog.e(TAG, message);
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(message);
     }
     final ViewGroup parentView = (ViewGroup) parentViewState.mView;
     ViewState viewState = getViewState(tag);
     final View view = viewState.mView;
     if (view == null) {
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(
           "Unable to find view for viewState " + viewState + " and tag " + tag);
     }
@@ -372,7 +372,7 @@ public class SurfaceMountingManager {
       getViewGroupManager(parentViewState).addView(parentView, view, index);
     } catch (IllegalStateException e) {
       // Wrap error with more context for debugging
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
       throw new IllegalStateException(
           "addViewAt: failed to insert view ["
               + tag
@@ -402,7 +402,7 @@ public class SurfaceMountingManager {
           });
     }
 
-    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
+//    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#addViewAt, " + System.currentTimeMillis());
   }
 
   @UiThread
@@ -754,22 +754,22 @@ public class SurfaceMountingManager {
 
   @UiThread
   public void updateLayout(int reactTag, int x, int y, int width, int height, int displayType) {
-    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
+//    Log.d(ReactConstants.TAG, "[MAYANT](main) start: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
     if (isStopped()) {
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       return;
     }
 
     ViewState viewState = getViewState(reactTag);
     // Do not layout Root Views
     if (viewState.mIsRoot) {
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       return;
     }
 
     View viewToUpdate = viewState.mView;
     if (viewToUpdate == null) {
-      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
+//      Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
       throw new IllegalStateException("Unable to find View for tag: " + reactTag);
     }
 
@@ -791,7 +791,7 @@ public class SurfaceMountingManager {
     if (viewToUpdate.getVisibility() != visibility) {
       viewToUpdate.setVisibility(visibility);
     }
-    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
+//    Log.d(ReactConstants.TAG, "[MAYANT](main) end: SurfaceMountingManager#updateLayout, " + System.currentTimeMillis());
   }
 
   @UiThread

@@ -152,7 +152,7 @@ long long getTime(){
 }
 
 void UIManagerBinding::clearAllLogs(int tag){
-  if(tag == 610){
+  if(tag == 70){
     // tag == 70 Add to existing 10 items
     // tag == 610 Add to existing 100 items
     fabricUiManagerCreateNodeCount = 0;
@@ -198,7 +198,7 @@ void UIManagerBinding::fabricUiManagerCompleteRoot(){
   LOG(INFO) << "***************************** Complete Root *****************************";
   LOG(INFO) << "createNode    : " << fabricUiManagerCreateNodeCount << ", " << fabricUiManagerCreateNodeStartTime << " - " << fabricUiManagerCreateNodeEndTime << " : " << fabricUiManagerCreateNodeEndTime - fabricUiManagerCreateNodeStartTime;
   LOG(INFO) << "appendNode    : " << fabricUiManagerAppendChildCount << ", " << fabricUiManagerAppendChildStartTime << " - " << fabricUiManagerAppendChildEndTime << " : " << fabricUiManagerAppendChildEndTime - fabricUiManagerAppendChildStartTime;
-  LOG(INFO) << "completeRoot  : " <<  time;
+  LOG(INFO) << "completeRoot  : " <<  time << ", epoch: " << std::chrono::system_clock::now().time_since_epoch().count();
   LOG(INFO) << fabricUiManagerCreateNodeStartTime << "," << fabricUiManagerCreateNodeEndTime << "," << fabricUiManagerAppendChildStartTime << "," << fabricUiManagerAppendChildEndTime << "," << time << ",";
 }
 
@@ -249,7 +249,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
-            d11::Logger l("nativeFabricUIManager.createNode");
+//            d11::Logger l("nativeFabricUIManager.createNode");
           auto eventTarget =
               eventTargetFromValue(runtime, arguments[4], arguments[0]);
           if (!eventTarget) {
@@ -280,7 +280,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
-            d11::Logger l("nativeFabricUIManager.cloneNode");
+//            d11::Logger l("nativeFabricUIManager.cloneNode");
           return valueFromShadowNode(
               runtime,
               uiManager->cloneNode(
@@ -348,7 +348,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
-            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildren");
+//            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildren");
           return valueFromShadowNode(
               runtime,
               uiManager->cloneNode(
@@ -368,7 +368,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
-            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewProps");
+//            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewProps");
           auto const &rawProps = RawProps(runtime, arguments[1]);
           return valueFromShadowNode(
               runtime,
@@ -390,7 +390,7 @@ jsi::Value UIManagerBinding::get(
             jsi::Value const &thisValue,
             jsi::Value const *arguments,
             size_t count) noexcept -> jsi::Value {
-            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildrenAndProps");
+//            d11::Logger l("nativeFabricUIManager.cloneNodeWithNewChildrenAndProps");
           auto const &rawProps = RawProps(runtime, arguments[1]);
           return valueFromShadowNode(
               runtime,
@@ -414,7 +414,7 @@ jsi::Value UIManagerBinding::get(
             size_t count) noexcept -> jsi::Value {
 //          LOG(INFO) << "--------------------------appendChild return **********************" << arguments[1]->toString(runtime);
 //          LOG(INFO) << "--------------------------appendChild return **********************";
-            d11::Logger l("nativeFabricUIManager.appendChild");
+//            d11::Logger l("nativeFabricUIManager.appendChild");
           fabricUiManagerAppendChild();
           uiManager->appendChild(
               shadowNodeFromValue(runtime, arguments[0]),
