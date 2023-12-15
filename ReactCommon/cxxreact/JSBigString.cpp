@@ -95,5 +95,16 @@ std::unique_ptr<const JSBigFileString> JSBigFileString::fromPath(
   return std::make_unique<const JSBigFileString>(fd, fileInfo.st_size);
 }
 
+std::unique_ptr<const JSBigFileString> JSBigFileString::fromByteArray(
+        const uint8_t* byteArray,
+        size_t byteCount) {
+    // Allocate memory for the byte array and copy data
+    char* dataCopy = new char[byteCount];
+    std::memcpy(dataCopy, byteArray, byteCount);
+
+    // Create the JSBigFileString from the copied data
+    return std::make_unique<const JSBigFileString>(dataCopy, byteCount);
+}
+
 } // namespace react
 } // namespace facebook

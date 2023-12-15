@@ -122,6 +122,9 @@ class RN_EXPORT JSBigFileString : public JSBigString {
   size_t size() const override;
   int fd() const;
 
+  static std::unique_ptr<const JSBigFileString> fromByteArray(
+            const uint8_t* byteArray, size_t byteCount);
+
   static std::unique_ptr<const JSBigFileString> fromPath(
       const std::string &sourceURL);
 

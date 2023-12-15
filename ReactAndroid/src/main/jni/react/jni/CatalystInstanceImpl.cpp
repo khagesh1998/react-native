@@ -273,6 +273,7 @@ void CatalystInstanceImpl::jniLoadScriptFromAssets(
     jni::alias_ref<JAssetManager::javaobject> assetManager,
     const std::string &assetURL,
     bool loadSynchronously) {
+  LOG(INFO) << "-------------------, jniLoadScriptFromAssets";
   const int kAssetsLength = 9; // strlen("assets://");
   auto sourceURL = assetURL.substr(kAssetsLength);
 
@@ -296,6 +297,7 @@ void CatalystInstanceImpl::jniLoadScriptFromFile(
     const std::string &fileName,
     const std::string &sourceURL,
     bool loadSynchronously) {
+  LOG(INFO) << "-------------------, jniLoadScriptFromAssets";
   auto reactInstance = instance_;
   if (!reactInstance) {
     return;
